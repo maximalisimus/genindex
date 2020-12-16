@@ -1,19 +1,22 @@
-ar.png
-ar
+archive.png
+arj
 zip
 rar
 gz
-xz
 gz2
+xz
 7z
 zst
+iso
 
 image.png
+jpeg
 jpg
 png
 gif
 tiff
 svg
+webdm
 
 music.png
 mp3
@@ -21,16 +24,77 @@ wav
 ogg
 flac
 
+movie.png
+flv
+mp4
+avi
+3gp
+wmv
+webm
+mpeg
+divx
+mkv
+
 package.png
 deb
 rpm
 
 patch.png
 patch
+
 pdf.png
 pdf
 
+word.png
+doc
+docx
+odt
+
+excel.png
+xls
+xlsx
+ods
+
+powerpoint.png
+ppt
+pptx
+odp
+
+c.png
+c
+
+cpp.png
+cpp
+
+header.png
+h
+
+log.png
+log
+
+html.png
+html
+htm
+
+css.png
+css
+
+php.png
+php
+
+pro.png
+pro
+
+cmake.png
+CMakeList.txt
+
+make.png
+Makefile
+
 script.png
+autogen
+autoconf
+automake
 sh
 py
 rb
@@ -40,23 +104,20 @@ cmd
 bat
 
 document.png
-xls
-odt
-ods
-doc
-docx
-xlsx
+dot
+csv
+xml
 
 conf.png
 conf
 ini
 asc
 
-pdf.png
+file.png
 
+folder.png
 
-script.png
-
+security.png
 
 back.png
 
