@@ -7,9 +7,15 @@ gz2
 xz
 7z
 zst
+bz2
+tar
+zip
+
+iso.png
 iso
 
 image.png
+bmp
 jpeg
 jpg
 png
@@ -17,6 +23,12 @@ gif
 tiff
 svg
 webdm
+
+help.png
+hlp
+
+chm.png
+chm
 
 music.png
 mp3
@@ -35,9 +47,13 @@ mpeg
 divx
 mkv
 
-package.png
+deb.png
 deb
+
+rpm.png
 rpm
+
+package.png
 
 patch.png
 patch
@@ -90,6 +106,19 @@ CMakeList.txt
 
 make.png
 Makefile
+make
+
+font.png
+ttf
+otf
+fon
+pfa
+pfb
+pfr
+fnt
+
+svg.png
+svg
 
 script.png
 autogen
@@ -104,6 +133,7 @@ cmd
 bat
 
 document.png
+rtf
 dot
 csv
 xml
