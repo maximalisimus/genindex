@@ -53,8 +53,6 @@ deb
 rpm.png
 rpm
 
-package.png
-
 patch.png
 patch
 
@@ -101,9 +99,6 @@ php
 pro.png
 pro
 
-cmake.png
-CMakeList.txt
-
 make.png
 Makefile
 make
@@ -143,6 +138,11 @@ conf
 ini
 asc
 
+cmake.png
+CMakeList.txt
+
+package.png
+
 file.png
 
 folder.png
@@ -150,5 +150,3 @@ folder.png
 security.png
 
 back.png
-
-
