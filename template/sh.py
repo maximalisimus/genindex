@@ -5,8 +5,9 @@ import os.path
 import base64
 import csv
 import sys
+from typing import List, Any
 
-csvdata = []
+csvdata: list[Any] = []
 
 csv_file = "icons.csv"
 
