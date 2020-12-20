@@ -15,7 +15,9 @@ def csv_reader(file_obj):
 		csv_data = csv.reader(csvfile)	
 		for row in csv_data:
 			# print(row) # Debug
-			csvdata.append(row)
+			# csvdata.append(row)
+			#print(str(' '.join(row)).split(' '))
+			csvdata.append(str(' '.join(row)).split(' '))
 
 def printcsv(listname = csvdata):
 	for i in range(len(listname)):
@@ -29,9 +31,10 @@ def main():
     #    print("No root directory specified!")
     #    exit(1)
     # Debug
-    print("Work")
-    # csv_reader(csv_file)
-    # printcsv()
+    # print("Work")
+    csv_reader(csv_file)
+    print(csvdata)
+    printcsv()
 
 if __name__=="__main__":
 	main()
