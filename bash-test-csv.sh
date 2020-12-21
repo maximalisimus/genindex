@@ -1,5 +1,5 @@
 #!/bin/bash
-_csv=$(cat icons2.csv | tr ',' '|' | xargs)
+_csv=$(cat template/icons.csv | tr ',' '|' | xargs)
 declare -a _csv_array
 _csv_array=( $_csv )
 unset _csv
