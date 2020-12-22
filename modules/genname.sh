@@ -20,11 +20,13 @@ function genname()
 	unset count
 	echo ${_res}
 }
-_name=""
-_tmp=""
-while [[ "${_tmp[*]}" != "0" ]]; do
-	_name=$( genname )
-	_tmp=$(find ./image/ -type f -iname "*${_name}*" | wc -l)
-done
-echo "${_name}"
-exit 0
+function create_name()
+{
+	local _name=""
+	local _tmp=""
+	while [[ "${_tmp[*]}" != "0" ]]; do
+		_name=$( genname )
+		_tmp=$(find $1 -type f -iname "*${_name}*" | wc -l)
+	done
+	echo "${_name}"
+}
