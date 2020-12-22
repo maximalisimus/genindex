@@ -1,3 +1,2 @@
-docs/* linguist-documentation
 * linguist-vendored
 *.sh linguist-vendored=false
