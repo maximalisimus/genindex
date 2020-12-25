@@ -26,7 +26,7 @@ function create_name()
 	local _tmp=""
 	while [[ "${_tmp[*]}" != "0" ]]; do
 		_name=$( genname )
-		_tmp=$(find $1 -type f -iname "*${_name}*" | wc -l)
+		_tmp=$(find "$1" -type f -iname "*${_name}*" | wc -l)
 	done
 	echo "${_name}"
 }
