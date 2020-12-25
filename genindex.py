@@ -10,12 +10,12 @@ from typing import Any
 csvdata: list[Any] = []
 
 directory = ""
-_font = ""
-_bgcolor = ""
+_font = "sans-serif"
+_bgcolor = "white"
 _exclude_dir: list[Any] = []
 _exclude_file: list[Any] = []
 
-csv_file = "config/template/icons2.csv"
+csv_file = "config/template/icons.csv"
 icon_path = "config/template/image/"
 
 def switch(case):
@@ -74,8 +74,8 @@ def main():
 			if switch(sys.argv[count]) == 4: _exclude_file.append(sys.argv[count + 1])
 			if switch(sys.argv[count]) == 5: print("Versions")
 			if switch(sys.argv[count]) == 6: print("Help!")
-	# print("Font = " + _font)
-	# print("BGColor = " + _bgcolor)
+	print("Font = " + _font)
+	print("BGColor = " + _bgcolor)
 	# print("\nExclude dir:")
 	# print(_exclude_dir)
 	# print("\nExclude files: ")
