@@ -16,6 +16,7 @@ _exclude_dir: list[Any] = []
 _exclude_file: list[Any] = []
 
 csv_file = "config/template/icons2.csv"
+icon_path = "config/template/image/"
 
 def switch(case):
 	return {
@@ -35,6 +36,13 @@ def csv_reader(file_obj):
 			# csvdata.append(row)
 			#print(str(' '.join(row)).split(' '))
 			csvdata.append(str(' '.join(row)).split(' '))
+
+def compare( value, listname = csvdata):
+	_tmp = ""
+	for i in range(len(listname)):
+		for j in range(len(listname[i])):
+			if listname[i][j] == value: _tmp = listname[i][0]
+	return _tmp
 
 def printcsv(listname = csvdata):
 	for i in range(len(listname)):
@@ -72,9 +80,11 @@ def main():
 	# print(_exclude_dir)
 	# print("\nExclude files: ")
 	# print(_exclude_file)
-	# csv_reader(csv_file)
+	csv_reader(csv_file)
 	# print(csvdata)
 	# printcsv()
+	# _file = compare("rar")
+	# if _file != "": _str = icon_path + _file + ".png"
 
 if __name__=="__main__":
 	main()
