@@ -26,16 +26,20 @@ function return_ext()
 	_ext=$(echo "$1" | rev | cut -d '.' -f1 | rev)
 	echo "${_ext[*]}"
 }
-show_dir "/home/mikl/003/" "html"
+show_dir "config/template/"
 cat ${temp_dir}
 echo ""
-show_file "/home/mikl/003/"
+show_dir "config/template/" "image"
+cat ${temp_dir}
+echo ""
+show_file "config/template/"
 cat ${temp_files}
 echo ""
-show_file "/home/mikl/003/" ".html"
+show_file "config/template/" ".html"
 echo ""
 cat ${temp_files}
 echo ""
+show_file "config/template/"
 while read line; do
 	my_ext=$(return_ext "$line")
 	echo "${my_ext}"
