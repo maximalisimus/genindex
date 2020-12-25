@@ -1,16 +1,31 @@
 #!/usr/bin/env python3
 
+import csv
 import os
 import os.path
-import base64
-import csv
 import sys
-
-from typing import List, Any
+import math
+from typing import Any
 
 csvdata: list[Any] = []
 
+directory = ""
+_font = ""
+_bgcolor = ""
+_exclude_dir: list[Any] = []
+_exclude_file: list[Any] = []
+
 csv_file = "config/template/icons2.csv"
+
+def switch(case):
+	return {
+		"-font": 1,
+		"-bgcolor": 2,
+		"-exclude-dir": 3,
+		"-exclude-file": 4,
+		"-v": 5,
+		"-h": 6
+	}.get(case, None)
 
 def csv_reader(file_obj):
 	with open(file_obj, "r") as csvfile:
@@ -28,13 +43,38 @@ def printcsv(listname = csvdata):
 			print(listname[i][j], end = '\n')
 
 def main():
-	#    print("No root directory specified!")
-    #    exit(1)
-    # Debug
-    print("Work")
-    csv_reader(csv_file)
-    print(csvdata)
-    printcsv()
+	global _font, _bgcolor
+	if len(sys.argv) <= 1:
+		print("Error! You did not specify a destination directory!")
+		exit(1)
+	elif len(sys.argv) == 1:
+		if not os.path.isdir(sys.argv[1]):
+			print("The specified parameter {0} is not a directory!".format(sys.argv[1]))
+			exit(2)
+		else:
+			directory = sys.argv[1]
+	else:
+		if not os.path.isdir(sys.argv[1]):
+			print("The specified parameter {0} is not a directory!".format(sys.argv[1]))
+			exit(2)
+		else:
+			directory = sys.argv[1]
+		for count in range(len(sys.argv)):
+			if switch(sys.argv[count]) == 1: _font = sys.argv[count+1]
+			if switch(sys.argv[count]) == 2: _bgcolor = sys.argv[count + 1]
+			if switch(sys.argv[count]) == 3: _exclude_dir.append(sys.argv[count + 1])
+			if switch(sys.argv[count]) == 4: _exclude_file.append(sys.argv[count + 1])
+			if switch(sys.argv[count]) == 5: print("Versions")
+			if switch(sys.argv[count]) == 6: print("Help!")
+	# print("Font = " + _font)
+	# print("BGColor = " + _bgcolor)
+	# print("\nExclude dir:")
+	# print(_exclude_dir)
+	# print("\nExclude files: ")
+	# print(_exclude_file)
+	# csv_reader(csv_file)
+	# print(csvdata)
+	# printcsv()
 
 if __name__=="__main__":
 	main()
