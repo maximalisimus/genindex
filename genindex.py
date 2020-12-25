@@ -10,7 +10,7 @@ from typing import List, Any
 
 csvdata: list[Any] = []
 
-csv_file = "template/icons2.csv"
+csv_file = "config/template/icons2.csv"
 
 def csv_reader(file_obj):
 	with open(file_obj, "r") as csvfile:
