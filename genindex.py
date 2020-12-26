@@ -5,6 +5,7 @@ import os
 import os.path
 import sys
 import math
+import time
 from typing import Any
 
 csvdata: list[Any] = []
@@ -124,7 +125,9 @@ def main():
 		#	print(_file)
 		#	_str = os.path.join(icon_path,_file)
 		#	# _str = icon_path + _file
-		#	print(_str)
+		#	fileSize = str(math.floor(os.path.getsize(_str) / 1000)) + " kB"
+		#	modifyTime = time.strftime('%d-%b-%Y %H:%M', time.localtime(os.path.getmtime(_str)))
+		#	print(_str, modifyTime, fileSize)
 		# work_in_dir(directory)
 
 if __name__=="__main__":
