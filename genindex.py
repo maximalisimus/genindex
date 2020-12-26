@@ -12,18 +12,22 @@ csvdata: list[Any] = []
 directory = ""
 _font = "sans-serif"
 _bgcolor = "white"
-_exclude: list[Any] = []
+_exclude_dir: list[Any] = []
+_exclude_file: list[Any] = []
 
-csv_file = "config/template/icons.csv"
-icon_path = "config/template/image/"
+csv_file = os.path.join("template","icons.csv")
+icon_path = os.path.join("template","image")
+# csv_file = "template/icons.csv"
+# icon_path = "template/image/"
 
 def switch(case):
 	return {
-		"-font": 1,
-		"-bgcolor": 2,
-		"-exclude": 3,
-		"-v": 4,
-		"-h": 5
+		"-dir": 1,
+		"-font": 2,
+		"-bgcolor": 3,
+		"-exclude-dir": 4,
+		"-v": 5,
+		"-h": 6
 	}.get(case, None)
 
 def csv_reader(file_obj):
@@ -39,7 +43,7 @@ def compare( value, listname = csvdata):
 	_tmp = ""
 	for i in range(len(listname)):
 		for j in range(len(listname[i])):
-			if listname[i][j] == value: _tmp = listname[i][0]
+			if str(listname[i][j]).lower() in str(value).lower(): _tmp = listname[i][0] + ".png"
 	return _tmp
 
 def stripCurrentDir(path):
@@ -63,57 +67,24 @@ def is_part_in_list(str_, words):
 			return True
 	return False
 
-def main():
-	global _font, _bgcolor
-	if len(sys.argv) <= 1:
-		print("Error! You did not specify a destination directory!")
-		exit(1)
-	elif len(sys.argv) == 1:
-		if not os.path.isdir(sys.argv[1]):
-			print("The specified parameter {0} is not a directory!".format(sys.argv[1]))
-			exit(2)
-		else:
-			directory = sys.argv[1]
-	else:
-		if not os.path.isdir(sys.argv[1]):
-			print("The specified parameter {0} is not a directory!".format(sys.argv[1]))
-			exit(2)
-		else:
-			directory = sys.argv[1]
-		for count in range(len(sys.argv)):
-			if switch(sys.argv[count]) == 1: _font = sys.argv[count+1]
-			if switch(sys.argv[count]) == 2: _bgcolor = sys.argv[count + 1]
-			if switch(sys.argv[count]) == 3: _exclude.append(sys.argv[count + 1])
-			if switch(sys.argv[count]) == 4: print("Versions")
-			if switch(sys.argv[count]) == 5: print("Help!")
-	# print("Font = " + _font)
-	# print("BGColor = " + _bgcolor)
-	# print("\nExclude dir:")
-	# print(_exclude_dir)
-	# print("\nExclude files: ")
-	# print(_exclude_file)
-	# csv_reader(csv_file)
-	# print(csvdata)
-	# printcsv()
-	# _file = compare("rar")
-	# if _file != "": _str = icon_path + _file + ".png"
-
-	for dirpath, dirnames, filenames in os.walk(directory, True, None, False):
-		_real_dir = str(dirpath).replace(directory,"")
-		if Enquiry(_exclude):
-			if not is_part_in_list(_real_dir,_exclude):
-				for a in _exclude:
-					if a in dirnames: dirnames.remove(a)
-				print("Каталог:",_real_dir)
+def work_in_dir(value_dir):
+	for dirpath, dirnames, filenames in os.walk(value_dir, True, None, False):
+		_real_dir = str(dirpath).replace(value_dir, "")
+		if Enquiry(_exclude_dir):
+			if not is_part_in_list(_real_dir, _exclude_dir):
+				for a in _exclude_dir:
+					if str(a).lower() in dirnames: dirnames.remove(a)
+				print("Каталог:", _real_dir)
 				if Enquiry(dirnames):
 					dirnames.sort()
 					for dirname in dirnames:
 						print("Direcory:", dirname)
 				else:
 					print("Directory is found!")
-				filenames.sort()
-				for filename in filenames:
-					print("Filename:", filename)
+				if Enquiry(filenames):
+					filenames.sort()
+					for filename in filenames:
+						print("Filename:", filename)
 		else:
 			print("Каталог:", _real_dir)
 			if Enquiry(dirnames):
@@ -122,9 +93,39 @@ def main():
 					print("Direcory:", dirname)
 			else:
 				print("Directory is found!")
-			filenames.sort()
-			for filename in filenames:
-				print("Filename:", filename)
+			if Enquiry(filenames):
+				filenames.sort()
+				for filename in filenames:
+					print("Filename:", filename)
+
+def main():
+	if len(sys.argv) > 2:
+		for count in range(len(sys.argv)):
+			if switch(sys.argv[count]) == 1: directory = sys.argv[count + 1]
+			if switch(sys.argv[count]) == 2: _font = sys.argv[count + 1]
+			if switch(sys.argv[count]) == 3: _bgcolor = sys.argv[count + 1]
+			if switch(sys.argv[count]) == 4: _exclude_dir.append(sys.argv[count + 1])
+			if switch(sys.argv[count]) == 5: print("Versions")
+			if switch(sys.argv[count]) == 6: print("Help!")
+		if not os.path.isdir(directory):
+			print("Parameter is not the directory", directory)
+			exit(1)
+		# print("Font = " + _font)
+		# print("BGColor = " + _bgcolor)
+		# print("\nExclude dir:")
+		# print(_exclude_dir)
+		# print("\nExclude files: ")
+		# print(_exclude_file)
+		csv_reader(csv_file)
+		# print(csvdata)
+		# printcsv()
+		# _file = compare(".exe")
+		# if _file != "":
+		#	print(_file)
+		#	_str = os.path.join(icon_path,_file)
+		#	# _str = icon_path + _file
+		#	print(_str)
+		# work_in_dir(directory)
 
 if __name__=="__main__":
 	main()
