@@ -6,7 +6,10 @@ import os.path
 import sys
 import math
 import time
+import random
 from typing import Any
+
+_lng_str = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
 csvdata: list[Any] = []
 
@@ -26,8 +29,9 @@ def switch(case):
 		"-bgcolor": 3,
 		"-exclude-dir": 4,
 		"-exclude-file": 5,
-		"-v": 6,
-		"-h": 7
+		"-genname": 6,
+		"-v": 7,
+		"-h": 8
 	}.get(case, None)
 
 def csv_reader(file_obj):
@@ -66,6 +70,31 @@ def is_part_in_list(str_, words):
 		if word.lower() in str_.lower():
 			return True
 	return False
+
+def genname():
+	_fine_str = ""
+	counter = 0
+	_tmp_str = random.choice(_lng_str)
+	_fine_str += _tmp_str
+	counter = random.randint(0, 9)
+	_fine_str += str(counter)
+	_tmp_str = random.choice(_lng_str)
+	_fine_str += _tmp_str
+	counter = random.randint(0, 9)
+	_fine_str += str(counter)
+	_tmp_str = random.choice(_lng_str)
+	_fine_str += _tmp_str
+	return str(_fine_str)
+
+def generate_random_name(_dirs):
+	_list_tmplt = os.listdir(_dirs)
+	_set_tmplt = set(_list_tmplt)
+	_gen_name = ""
+	while True:
+		_gen_name = genname()
+		if not _gen_name in _set_tmplt: break
+	_image_name = _gen_name + ".png"
+	return str(_image_name)
 
 def work_in_dir(value_dir):
 	for dirpath, dirnames, filenames in os.walk(value_dir, True, None, False):
@@ -128,8 +157,9 @@ def main():
 			if switch(sys.argv[count]) == 3: _bgcolor = sys.argv[count + 1]
 			if switch(sys.argv[count]) == 4: _exclude_dir.append(sys.argv[count + 1])
 			if switch(sys.argv[count]) == 5: _exclude_file.append(sys.argv[count + 1])
-			if switch(sys.argv[count]) == 6: print("Versions")
-			if switch(sys.argv[count]) == 7: print("Help!")
+			if switch(sys.argv[count]) == 6: print(generate_random_name(icon_path))
+			if switch(sys.argv[count]) == 7: print("Versions")
+			if switch(sys.argv[count]) == 8: print("Help!")
 		if not os.path.isdir(directory):
 			print("Parameter is not the directory", directory)
 			exit(1)
@@ -150,7 +180,7 @@ def main():
 		#	fileSize = str(math.floor(os.path.getsize(_str) / 1000)) + " kB"
 		#	modifyTime = time.strftime('%d-%b-%Y %H:%M', time.localtime(os.path.getmtime(_str)))
 		#	print(_str, modifyTime, fileSize)
-		work_in_dir(directory)
+		# work_in_dir(directory)
 
 if __name__=="__main__":
 	main()
