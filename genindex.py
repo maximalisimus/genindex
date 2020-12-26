@@ -18,8 +18,6 @@ _exclude_file: list[Any] = []
 
 csv_file = os.path.join("template","icons.csv")
 icon_path = os.path.join("template","image")
-# csv_file = "template/icons.csv"
-# icon_path = "template/image/"
 
 def switch(case):
 	return {
@@ -27,8 +25,9 @@ def switch(case):
 		"-font": 2,
 		"-bgcolor": 3,
 		"-exclude-dir": 4,
-		"-v": 5,
-		"-h": 6
+		"-exclude-file": 5,
+		"-v": 6,
+		"-h": 7
 	}.get(case, None)
 
 def csv_reader(file_obj):
@@ -83,9 +82,20 @@ def work_in_dir(value_dir):
 				else:
 					print("Directory is found!")
 				if Enquiry(filenames):
-					filenames.sort()
-					for filename in filenames:
-						print("Filename:", filename)
+					if Enquiry(_exclude_file):
+						_str_one = set(filenames)
+						_str_two = set(_exclude_file)
+						_new_filename: list[Any] = []
+						_new_filename.clear()
+						for key1 in _str_one:
+							if not is_part_in_list(str(key1),_str_two): _new_filename.append(key1)
+						_new_filename.sort()
+						for filename in _new_filename:
+							print("Filename:", filename)
+					else:
+						filenames.sort()
+						for filename in filenames:
+							print("Filename:", filename)
 		else:
 			print("Каталог:", _real_dir)
 			if Enquiry(dirnames):
@@ -95,9 +105,20 @@ def work_in_dir(value_dir):
 			else:
 				print("Directory is found!")
 			if Enquiry(filenames):
-				filenames.sort()
-				for filename in filenames:
-					print("Filename:", filename)
+				if Enquiry(_exclude_file):
+					_str_one = set(filenames)
+					_str_two = set(_exclude_file)
+					_new_filename: list[Any] = []
+					_new_filename.clear()
+					for key1 in _str_one:
+						if not is_part_in_list(str(key1), _str_two): _new_filename.append(key1)
+					_new_filename.sort()
+					for filename in _new_filename:
+						print("Filename:", filename)
+				else:
+					filenames.sort()
+					for filename in filenames:
+						print("Filename:", filename)
 
 def main():
 	if len(sys.argv) > 2:
@@ -106,8 +127,9 @@ def main():
 			if switch(sys.argv[count]) == 2: _font = sys.argv[count + 1]
 			if switch(sys.argv[count]) == 3: _bgcolor = sys.argv[count + 1]
 			if switch(sys.argv[count]) == 4: _exclude_dir.append(sys.argv[count + 1])
-			if switch(sys.argv[count]) == 5: print("Versions")
-			if switch(sys.argv[count]) == 6: print("Help!")
+			if switch(sys.argv[count]) == 5: _exclude_file.append(sys.argv[count + 1])
+			if switch(sys.argv[count]) == 6: print("Versions")
+			if switch(sys.argv[count]) == 7: print("Help!")
 		if not os.path.isdir(directory):
 			print("Parameter is not the directory", directory)
 			exit(1)
@@ -128,7 +150,7 @@ def main():
 		#	fileSize = str(math.floor(os.path.getsize(_str) / 1000)) + " kB"
 		#	modifyTime = time.strftime('%d-%b-%Y %H:%M', time.localtime(os.path.getmtime(_str)))
 		#	print(_str, modifyTime, fileSize)
-		# work_in_dir(directory)
+		work_in_dir(directory)
 
 if __name__=="__main__":
 	main()
