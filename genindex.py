@@ -160,8 +160,8 @@ def main():
 			if switch(sys.argv[count]) == 7: print("Versions")
 			if switch(sys.argv[count]) == 8: print("Help!")
 		if not os.path.isdir(directory):
-			print("Parameter is not the directory", directory)
-			exit(1)
+			print("Parameter is not the directory", directory, "\nHelp")
+			# exit(1)
 		# print("Font = " + _font)
 		# print("BGColor = " + _bgcolor)
 		# print("\nExclude dir:")
