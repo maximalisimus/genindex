@@ -1,7 +1,0 @@
-
-file.png
-w9c4z.png - Cmakelist
-folder.png
-r3i1s.png - Make
-sha*, md5sums
-

@@ -21,6 +21,17 @@ _exclude_file = []
 csv_file = os.path.join("template","icons.csv")
 icon_path = os.path.join("template","image")
 
+icon_make = "r3i1s.png"
+icon_cmake = "w9c4z.png"
+icon_folder = "folder.png"
+icon_file = "file.png"
+icon_sums = "q6f3z.png"
+
+str_make = "Makefile"
+str_cmake = "Cmakelist"
+str_shasums = "sha"
+str_md5sums = "md5sums"
+
 def switch(case):
 	return {
 		"-dir": 1,
@@ -32,6 +43,12 @@ def switch(case):
 		"-v": 7,
 		"-h": 8
 	}.get(case, None)
+
+def Enquiry(lis1):
+	if len(lis1) == 0:
+		return 0
+	else:
+		return 1
 
 def csv_reader(file_obj):
 	with open(file_obj, "r") as csvfile:
@@ -46,8 +63,9 @@ def compare( value, listname = csvdata):
 	_tmp = ""
 	for i in range(len(listname)):
 		for j in range(len(listname[i])):
-			if str(listname[i][j]).lower() in str(value).lower(): _tmp = listname[i][0] + ".png"
-	return _tmp
+			if str(listname[i][j]).lower() == str(value)[1:].lower(): _tmp = listname[i][0] + ".png"
+	if Enquiry(_tmp): return _tmp
+	else: return False
 
 def stripCurrentDir(path):
 	return path.replace("./", "").replace("/.", "")
@@ -57,12 +75,6 @@ def printcsv(listname = csvdata):
 		# print(listname[i][0], end = '\n')
 		for j in range(len(listname[i])):
 			print(listname[i][j], end = '\n')
-
-def Enquiry(lis1):
-	if len(lis1) == 0:
-		return 0
-	else:
-		return 1
 
 def is_part_in_list(str_, words):
 	for word in words:
@@ -84,6 +96,18 @@ def genname():
 	_tmp_str = random.choice(_lng_str)
 	_fine_str += _tmp_str
 	return str(_fine_str)
+
+def check_the_file(fname):
+	root_name = os.path.splitext(fname)[0]
+	root_ext = os.path.splitext(fname)[1]
+	if str_make.lower() in str(root_name).lower(): return icon_make
+	if str_cmake.lower() in str(root_name).lower(): return icon_cmake
+	if str_shasums.lower() in str(root_name).lower(): return icon_sums
+	if str_md5sums.lower() in str(root_name).lower(): return icon_sums
+	root_result = compare(root_ext)
+	if root_result != False: return root_result
+	else:
+		return icon_file
 
 def generate_random_name(_dirs):
 	_list_tmplt = os.listdir(_dirs)
@@ -180,6 +204,8 @@ def main():
 		#	modifyTime = time.strftime('%d-%b-%Y %H:%M', time.localtime(os.path.getmtime(_str)))
 		#	print(_str, modifyTime, fileSize)
 		# work_in_dir(directory)
+		# in_file = 'sha256sums.txt'
+		# print(check_the_file(in_file))
 
 if __name__=="__main__":
 	main()
