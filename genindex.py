@@ -171,7 +171,7 @@ def main():
 		csv_reader(csv_file)
 		# print(csvdata)
 		# printcsv()
-		# _file = compare(".exe")
+		# _file = compare(".mui")
 		# if _file != "":
 		#	print(_file)
 		#	_str = os.path.join(icon_path,_file)
