@@ -7,17 +7,16 @@ import sys
 import math
 import time
 import random
-from typing import Any
 
 _lng_str = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
-csvdata: list[Any] = []
+csvdata = []
 
 directory = ""
 _font = "sans-serif"
 _bgcolor = "white"
-_exclude_dir: list[Any] = []
-_exclude_file: list[Any] = []
+_exclude_dir = []
+_exclude_file = []
 
 csv_file = os.path.join("template","icons.csv")
 icon_path = os.path.join("template","image")
@@ -114,7 +113,7 @@ def work_in_dir(value_dir):
 					if Enquiry(_exclude_file):
 						_str_one = set(filenames)
 						_str_two = set(_exclude_file)
-						_new_filename: list[Any] = []
+						_new_filename = []
 						_new_filename.clear()
 						for key1 in _str_one:
 							if not is_part_in_list(str(key1),_str_two): _new_filename.append(key1)
@@ -137,7 +136,7 @@ def work_in_dir(value_dir):
 				if Enquiry(_exclude_file):
 					_str_one = set(filenames)
 					_str_two = set(_exclude_file)
-					_new_filename: list[Any] = []
+					_new_filename = []
 					_new_filename.clear()
 					for key1 in _str_one:
 						if not is_part_in_list(str(key1), _str_two): _new_filename.append(key1)
