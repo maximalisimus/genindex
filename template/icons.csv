@@ -1,5 +1,5 @@
 b5i9v,arj,zip,rar,gz,gz2,xz,7z,bz2,tar,zip,cab
-b5j7k,iso,mds,mdf,ccd,img,sub,cue,bin,nrg,bwt,bwi,bws,cdi
+b5j7k,iso,mds,mdf,ccd,img,sub,cue,nrg,bwt,bwi,bws,cdi
 b7m2o,bmp,jpeg,jpg,png,gif,tiff,svg,webdm,ico,cdr,eps,wmf
 c3t4s,hlp
 d5g1v,chm
@@ -27,7 +27,7 @@ s3b4b,sh,py,rb,vbs,ps1,AppImage,json,pl
 t2h1s,bat,cmd
 w1l5d,rtf,dot,csv,xml,txt,md,locale,mo,trans
 w4c1d,conf,ini,asc,cnf,cur,ani,sys,mui,spl,inf
-x1q8u,exe,msi,scr,run
+x1q8u,exe,msi,scr,run,bin
 n7p9z,ovpn,vpn
 o1q5j,pem,crl,crt,key,gpg,pub,rsa,rev,req,cer
 t5d0x,sig,asc,sam
