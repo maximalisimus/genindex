@@ -7,6 +7,7 @@ import sys
 import math
 import time
 import random
+import ontrees
 
 _lng_str = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
@@ -34,14 +35,15 @@ str_md5sums = "md5sums"
 
 def switch(case):
 	return {
-		"-dir": 1,
-		"-font": 2,
-		"-bgcolor": 3,
-		"-exclude-dir": 4,
-		"-exclude-file": 5,
-		"-genname": 6,
-		"-v": 7,
-		"-h": 8
+		"-tree": 1,
+		"-dir": 2,
+		"-font": 3,
+		"-bgcolor": 4,
+		"-exclude-dir": 5,
+		"-exclude-file": 6,
+		"-genname": 7,
+		"-v": 8,
+		"-h": 9
 	}.get(case, None)
 
 def Enquiry(lis1):
@@ -174,18 +176,29 @@ def work_in_dir(value_dir):
 
 def main():
 	if len(sys.argv) > 2:
+		_trees = False
 		for count in range(len(sys.argv)):
-			if switch(sys.argv[count]) == 1: directory = sys.argv[count + 1]
-			if switch(sys.argv[count]) == 2: _font = sys.argv[count + 1]
-			if switch(sys.argv[count]) == 3: _bgcolor = sys.argv[count + 1]
-			if switch(sys.argv[count]) == 4: _exclude_dir.append(sys.argv[count + 1])
-			if switch(sys.argv[count]) == 5: _exclude_file.append(sys.argv[count + 1])
-			if switch(sys.argv[count]) == 6: print(generate_random_name(icon_path))
-			if switch(sys.argv[count]) == 7: print("Versions")
-			if switch(sys.argv[count]) == 8: print("Help!")
+			if switch(sys.argv[count]) == 1:
+				directory = sys.argv[count + 1]
+				if not os.path.isdir(directory):
+					print("Parameter is not the directory", directory, "\nHelp")
+					exit(1)
+				else:
+					_on_trees = ontrees.DisplayablePath.make_tree(ontrees.Path(directory))
+					for path in _on_trees:
+						print(path.displayable())
+					exit(0)
+			if switch(sys.argv[count]) == 2: directory = sys.argv[count + 1]
+			if switch(sys.argv[count]) == 3: _font = sys.argv[count + 1]
+			if switch(sys.argv[count]) == 4: _bgcolor = sys.argv[count + 1]
+			if switch(sys.argv[count]) == 5: _exclude_dir.append(sys.argv[count + 1])
+			if switch(sys.argv[count]) == 6: _exclude_file.append(sys.argv[count + 1])
+			if switch(sys.argv[count]) == 7: print(generate_random_name(icon_path))
+			if switch(sys.argv[count]) == 8: print("Versions")
+			if switch(sys.argv[count]) == 9: print("Help!")
 		if not os.path.isdir(directory):
 			print("Parameter is not the directory", directory, "\nHelp")
-			# exit(1)
+			exit(1)
 		# print("Font = " + _font)
 		# print("BGColor = " + _bgcolor)
 		# print("\nExclude dir:")
@@ -204,8 +217,8 @@ def main():
 		#	modifyTime = time.strftime('%d-%b-%Y %H:%M', time.localtime(os.path.getmtime(_str)))
 		#	print(_str, modifyTime, fileSize)
 		# work_in_dir(directory)
-		# in_file = 'sha256sums.txt'
-		# print(check_the_file(in_file))
+		in_file = 'sha256sums.txt'
+		print(check_the_file(in_file))
 
 if __name__=="__main__":
 	main()
