@@ -217,8 +217,8 @@ def main():
 		#	modifyTime = time.strftime('%d-%b-%Y %H:%M', time.localtime(os.path.getmtime(_str)))
 		#	print(_str, modifyTime, fileSize)
 		# work_in_dir(directory)
-		in_file = 'sha256sums.txt'
-		print(check_the_file(in_file))
+		# in_file = 'sha256sums.txt'
+		# print(check_the_file(in_file))
 
 if __name__=="__main__":
 	main()
