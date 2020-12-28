@@ -7,7 +7,6 @@ import sys
 import math
 import time
 import random
-import ontrees
 
 _lng_str = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
@@ -121,6 +120,98 @@ def generate_random_name(_dirs):
 	_image_name = _gen_name + ".png"
 	return str(_image_name)
 
+def list_files(startpath):
+	prefix_start = '┌'
+	prefix_middle = '├──'
+	prefix_fine = '└──'
+	prefix_last = '│'
+	_start_files = []
+	_count_cnt = 0
+	_count_len = 0
+	_cnt = 0
+	for root, dirs, files in os.walk(startpath):
+		_real_dir = str(root).replace(startpath, "")
+		if Enquiry(_exclude_dir):
+			if not is_part_in_list(_real_dir, _exclude_dir):
+				level = root.replace(startpath, '').count(os.sep)
+				indent = '─' * 2 * (level)
+				subindent = ' ' * 2 * (level + 1)
+				_start_dir = root.replace(startpath, '')
+				if len(_start_dir) == 0:
+					print(prefix_start,startpath)
+				else:
+					if level == 0:
+						print(prefix_middle,os.path.basename(root))
+					else:
+						_line = prefix_middle + indent
+						print(_line,os.path.basename(root))
+				if _cnt == 0:
+					for f in files:
+						_start_files.append(f)
+				else:
+					files.sort()
+					_count_len = len(files) -1
+					_count_cnt = 0
+					for f in files:
+						if _count_cnt == _count_len:
+							print(prefix_last,subindent,prefix_fine,f)
+						else:
+							print(prefix_last,subindent,prefix_middle,f)
+						_count_cnt +=1
+				_cnt+=1		
+		else:
+			level = root.replace(startpath, '').count(os.sep)
+			indent = '─' * 2 * (level)
+			subindent = ' ' * 2 * (level + 1)
+			_start_dir = root.replace(startpath, '')
+			if len(_start_dir) == 0:
+				print(prefix_start,startpath)
+			else:
+				if level == 0:
+					print(prefix_middle,os.path.basename(root))
+				else:
+					_line = prefix_middle + indent
+					print(_line,os.path.basename(root))
+			if _cnt == 0:
+				for f in files:
+					_start_files.append(f)
+			else:
+				files.sort()
+				_count_len = len(files) -1
+				_count_cnt = 0
+				for f in files:
+					if _count_cnt == _count_len:
+						print(prefix_last,subindent,prefix_fine,f)
+					else:
+						print(prefix_last,subindent,prefix_middle,f)
+					_count_cnt +=1
+			_cnt+=1
+	_start_files.sort()
+	_count_cnt = 0
+	_count_len = len(_start_files) -1
+	if Enquiry(_exclude_file):
+		_str_one = set(_start_files)
+		_str_two = set(_exclude_file)
+		_new_filename = []
+		_new_filename.clear()
+		for key1 in _str_one:
+			if not is_part_in_list(str(key1),_str_two): _new_filename.append(key1)
+		_new_filename.sort()
+		_count_len = len(_new_filename) -1
+		for _file in _new_filename:
+			if _count_cnt == _count_len:
+				print(prefix_fine,_file)
+			else:
+				print(prefix_middle,_file)
+			_count_cnt +=1
+	else:
+		for _file in _start_files:
+			if _count_cnt == _count_len:
+				print(prefix_fine,_file)
+			else:
+				print(prefix_middle,_file)
+			_count_cnt +=1
+
 def work_in_dir(value_dir):
 	for dirpath, dirnames, filenames in os.walk(value_dir, True, None, False):
 		_real_dir = str(dirpath).replace(value_dir, "")
@@ -184,9 +275,7 @@ def main():
 					print("Parameter is not the directory", directory, "\nHelp")
 					exit(1)
 				else:
-					_on_trees = ontrees.DisplayablePath.make_tree(ontrees.Path(directory))
-					for path in _on_trees:
-						print(path.displayable())
+					list_files(directory)
 					exit(0)
 			if switch(sys.argv[count]) == 2: directory = sys.argv[count + 1]
 			if switch(sys.argv[count]) == 3: _font = sys.argv[count + 1]
