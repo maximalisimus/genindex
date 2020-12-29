@@ -121,10 +121,6 @@ def generate_random_name(_dirs):
 	return str(_image_name)
 
 def list_files(startpath):
-	prefix_start = '┌'
-	prefix_middle = '├──'
-	prefix_fine = '└──'
-	prefix_last = '│'
 	_start_files = []
 	_count_cnt = 0
 	_count_len = 0
@@ -134,61 +130,51 @@ def list_files(startpath):
 		if Enquiry(_exclude_dir):
 			if not is_part_in_list(_real_dir, _exclude_dir):
 				level = root.replace(startpath, '').count(os.sep)
-				indent = '─' * 2 * (level)
+				indent = ' ' * 2 * (level)
+				print('{}{}/'.format(indent, os.path.basename(root)))
 				subindent = ' ' * 2 * (level + 1)
-				_start_dir = root.replace(startpath, '')
-				if len(_start_dir) == 0:
-					print(prefix_start,startpath)
-				else:
-					if level == 0:
-						print(prefix_middle,os.path.basename(root))
-					else:
-						_line = prefix_middle + indent
-						print(_line,os.path.basename(root))
 				if _cnt == 0:
 					for f in files:
 						_start_files.append(f)
 				else:
-					files.sort()
-					_count_len = len(files) -1
-					_count_cnt = 0
-					for f in files:
-						if _count_cnt == _count_len:
-							print(prefix_last,subindent,prefix_fine,f)
-						else:
-							print(prefix_last,subindent,prefix_middle,f)
-						_count_cnt +=1
-				_cnt+=1		
-		else:
+					if Enquiry(_exclude_file):
+						_str_one = set(files)
+						_str_two = set(_exclude_file)
+						_new_filename = []
+						_new_filename.clear()
+						for key1 in _str_one:
+							if not is_part_in_list(str(key1),_str_two): _new_filename.append(key1)
+						_new_filename.sort()
+						for f in _new_filename:
+							print('{}{}'.format(subindent, f))
+					else:
+						files.sort()
+						for f in files:
+							print('{}{}'.format(subindent, f))
+		else:		
 			level = root.replace(startpath, '').count(os.sep)
-			indent = '─' * 2 * (level)
+			indent = ' ' * 2 * (level)
+			print('{}{}/'.format(indent, os.path.basename(root)))
 			subindent = ' ' * 2 * (level + 1)
-			_start_dir = root.replace(startpath, '')
-			if len(_start_dir) == 0:
-				print(prefix_start,startpath)
-			else:
-				if level == 0:
-					print(prefix_middle,os.path.basename(root))
-				else:
-					_line = prefix_middle + indent
-					print(_line,os.path.basename(root))
 			if _cnt == 0:
 				for f in files:
 					_start_files.append(f)
 			else:
-				files.sort()
-				_count_len = len(files) -1
-				_count_cnt = 0
-				for f in files:
-					if _count_cnt == _count_len:
-						print(prefix_last,subindent,prefix_fine,f)
-					else:
-						print(prefix_last,subindent,prefix_middle,f)
-					_count_cnt +=1
-			_cnt+=1
-	_start_files.sort()
-	_count_cnt = 0
-	_count_len = len(_start_files) -1
+				if Enquiry(_exclude_file):
+					_str_one = set(files)
+					_str_two = set(_exclude_file)
+					_new_filename = []
+					_new_filename.clear()
+					for key1 in _str_one:
+						if not is_part_in_list(str(key1),_str_two): _new_filename.append(key1)
+					_new_filename.sort()
+					for f in _new_filename:
+						print('{}{}'.format(subindent, f))
+				else:
+					files.sort()
+					for f in files:
+						print('{}{}'.format(subindent, f))
+		_cnt+=1
 	if Enquiry(_exclude_file):
 		_str_one = set(_start_files)
 		_str_two = set(_exclude_file)
@@ -197,20 +183,11 @@ def list_files(startpath):
 		for key1 in _str_one:
 			if not is_part_in_list(str(key1),_str_two): _new_filename.append(key1)
 		_new_filename.sort()
-		_count_len = len(_new_filename) -1
-		for _file in _new_filename:
-			if _count_cnt == _count_len:
-				print(prefix_fine,_file)
-			else:
-				print(prefix_middle,_file)
-			_count_cnt +=1
+		for f in _new_filename:
+			print(f)
 	else:
-		for _file in _start_files:
-			if _count_cnt == _count_len:
-				print(prefix_fine,_file)
-			else:
-				print(prefix_middle,_file)
-			_count_cnt +=1
+		for f in _start_files:
+			print(f)
 
 def work_in_dir(value_dir):
 	for dirpath, dirnames, filenames in os.walk(value_dir, True, None, False):
@@ -268,26 +245,26 @@ def work_in_dir(value_dir):
 def main():
 	if len(sys.argv) > 2:
 		_trees = False
+		_generate_name = False
 		for count in range(len(sys.argv)):
-			if switch(sys.argv[count]) == 1:
-				directory = sys.argv[count + 1]
-				if not os.path.isdir(directory):
-					print("Parameter is not the directory", directory, "\nHelp")
-					exit(1)
-				else:
-					list_files(directory)
-					exit(0)
+			if switch(sys.argv[count]) == 1: _trees = True
 			if switch(sys.argv[count]) == 2: directory = sys.argv[count + 1]
 			if switch(sys.argv[count]) == 3: _font = sys.argv[count + 1]
 			if switch(sys.argv[count]) == 4: _bgcolor = sys.argv[count + 1]
 			if switch(sys.argv[count]) == 5: _exclude_dir.append(sys.argv[count + 1])
 			if switch(sys.argv[count]) == 6: _exclude_file.append(sys.argv[count + 1])
-			if switch(sys.argv[count]) == 7: print(generate_random_name(icon_path))
+			if switch(sys.argv[count]) == 7: _generate_name = True
 			if switch(sys.argv[count]) == 8: print("Versions")
 			if switch(sys.argv[count]) == 9: print("Help!")
+		if _generate_name == True:
+			print(generate_random_name(icon_path))
+			exit(0)
 		if not os.path.isdir(directory):
 			print("Parameter is not the directory", directory, "\nHelp")
 			exit(1)
+		if _trees == True:
+			list_files(directory)
+			exit(0)
 		# print("Font = " + _font)
 		# print("BGColor = " + _bgcolor)
 		# print("\nExclude dir:")
@@ -311,3 +288,4 @@ def main():
 
 if __name__=="__main__":
 	main()
+
