@@ -11,6 +11,7 @@ def main():
 	#directory = "./"
 	#webbrowser.open(os.path.realpath(directory))
 	print(platform.system())
+	# tree -h -D --dirsfirst --sort=name -H . > index.html
 
 if __name__=="__main__":
 	main()
