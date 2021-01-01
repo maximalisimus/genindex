@@ -34,15 +34,14 @@ str_md5sums = "md5sums"
 
 def switch(case):
 	return {
-		"-tree": 1,
-		"-dir": 2,
-		"-font": 3,
-		"-bgcolor": 4,
-		"-exclude-dir": 5,
-		"-exclude-file": 6,
-		"-genname": 7,
-		"-v": 8,
-		"-h": 9
+		"-dir": 1,
+		"-font": 2,
+		"-bgcolor": 3,
+		"-exclude-dir": 4,
+		"-exclude-file": 5,
+		"-genname": 6,
+		"-v": 7,
+		"-h": 8
 	}.get(case, None)
 
 def Enquiry(lis1):
@@ -120,75 +119,6 @@ def generate_random_name(_dirs):
 	_image_name = _gen_name + ".png"
 	return str(_image_name)
 
-def list_files(startpath):
-	_start_files = []
-	_count_cnt = 0
-	_count_len = 0
-	_cnt = 0
-	for root, dirs, files in os.walk(startpath):
-		_real_dir = str(root).replace(startpath, "")
-		if Enquiry(_exclude_dir):
-			if not is_part_in_list(_real_dir, _exclude_dir):
-				level = root.replace(startpath, '').count(os.sep)
-				indent = ' ' * 2 * (level)
-				print('{}{}/'.format(indent, os.path.basename(root)))
-				subindent = ' ' * 2 * (level + 1)
-				if _cnt == 0:
-					for f in files:
-						_start_files.append(f)
-				else:
-					if Enquiry(_exclude_file):
-						_str_one = set(files)
-						_str_two = set(_exclude_file)
-						_new_filename = []
-						_new_filename.clear()
-						for key1 in _str_one:
-							if not is_part_in_list(str(key1),_str_two): _new_filename.append(key1)
-						_new_filename.sort()
-						for f in _new_filename:
-							print('{}{}'.format(subindent, f))
-					else:
-						files.sort()
-						for f in files:
-							print('{}{}'.format(subindent, f))
-		else:		
-			level = root.replace(startpath, '').count(os.sep)
-			indent = ' ' * 2 * (level)
-			print('{}{}/'.format(indent, os.path.basename(root)))
-			subindent = ' ' * 2 * (level + 1)
-			if _cnt == 0:
-				for f in files:
-					_start_files.append(f)
-			else:
-				if Enquiry(_exclude_file):
-					_str_one = set(files)
-					_str_two = set(_exclude_file)
-					_new_filename = []
-					_new_filename.clear()
-					for key1 in _str_one:
-						if not is_part_in_list(str(key1),_str_two): _new_filename.append(key1)
-					_new_filename.sort()
-					for f in _new_filename:
-						print('{}{}'.format(subindent, f))
-				else:
-					files.sort()
-					for f in files:
-						print('{}{}'.format(subindent, f))
-		_cnt+=1
-	if Enquiry(_exclude_file):
-		_str_one = set(_start_files)
-		_str_two = set(_exclude_file)
-		_new_filename = []
-		_new_filename.clear()
-		for key1 in _str_one:
-			if not is_part_in_list(str(key1),_str_two): _new_filename.append(key1)
-		_new_filename.sort()
-		for f in _new_filename:
-			print(f)
-	else:
-		for f in _start_files:
-			print(f)
-
 def work_in_dir(value_dir):
 	for dirpath, dirnames, filenames in os.walk(value_dir, True, None, False):
 		_real_dir = str(dirpath).replace(value_dir, "")
@@ -244,27 +174,22 @@ def work_in_dir(value_dir):
 
 def main():
 	if len(sys.argv) > 2:
-		_trees = False
 		_generate_name = False
 		for count in range(len(sys.argv)):
-			if switch(sys.argv[count]) == 1: _trees = True
-			if switch(sys.argv[count]) == 2: directory = sys.argv[count + 1]
-			if switch(sys.argv[count]) == 3: _font = sys.argv[count + 1]
-			if switch(sys.argv[count]) == 4: _bgcolor = sys.argv[count + 1]
-			if switch(sys.argv[count]) == 5: _exclude_dir.append(sys.argv[count + 1])
-			if switch(sys.argv[count]) == 6: _exclude_file.append(sys.argv[count + 1])
-			if switch(sys.argv[count]) == 7: _generate_name = True
-			if switch(sys.argv[count]) == 8: print("Versions")
-			if switch(sys.argv[count]) == 9: print("Help!")
+			if switch(sys.argv[count]) == 1: directory = sys.argv[count + 1]
+			if switch(sys.argv[count]) == 2: _font = sys.argv[count + 1]
+			if switch(sys.argv[count]) == 3: _bgcolor = sys.argv[count + 1]
+			if switch(sys.argv[count]) == 4: _exclude_dir.append(sys.argv[count + 1])
+			if switch(sys.argv[count]) == 5: _exclude_file.append(sys.argv[count + 1])
+			if switch(sys.argv[count]) == 6: _generate_name = True
+			if switch(sys.argv[count]) == 7: print("Versions")
+			if switch(sys.argv[count]) == 8: print("Help!")
 		if _generate_name == True:
 			print(generate_random_name(icon_path))
 			exit(0)
 		if not os.path.isdir(directory):
 			print("Parameter is not the directory", directory, "\nHelp")
 			exit(1)
-		if _trees == True:
-			list_files(directory)
-			exit(0)
 		# print("Font = " + _font)
 		# print("BGColor = " + _bgcolor)
 		# print("\nExclude dir:")
