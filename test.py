@@ -163,6 +163,12 @@ class IconFile:
 		if dirs == None: self.dirs = icon_path
 		else: self.dirs = dirs
 	
+	def getIconFolder(self):
+		return self.icon_folder
+	
+	def getIconBack(self):
+		return self.icon_back
+	
 	def csv_reader(self):
 		file_obj = csv_file
 		with open(file_obj, "r") as csvfile:
@@ -274,11 +280,22 @@ class Arguments:
 	def getGenName(self):
 		return self.generate_name
 	
+	def getAddIndex(self):
+		return self.add_index
+	
 	def getPrintVers(self):
 		return self.print_vers
 	
 	def getPrintHelp(self):
 		return self.print_help
+	
+	def isExcDir(self):
+		if Resources.Enquiry(self.exclude_dir): return True
+		else: return False
+		
+	def isExcFile(self):
+		if Resources.Enquiry(self.exclude_file): return True
+		else: return False
 	
 	def checkArgs(self):
 		for count in range(len(self.args)):
