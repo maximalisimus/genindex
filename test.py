@@ -292,10 +292,16 @@ class Arguments:
 	def isExcDir(self):
 		if Resources.Enquiry(self.exclude_dir): return True
 		else: return False
-		
+	
+	def getExcDir(self):
+		return self.exclude_dir
+	
 	def isExcFile(self):
 		if Resources.Enquiry(self.exclude_file): return True
 		else: return False
+	
+	def getExcFile(self):
+		return self.exclude_file
 	
 	def checkArgs(self):
 		for count in range(len(self.args)):
