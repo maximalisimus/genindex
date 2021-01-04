@@ -146,6 +146,16 @@ def genname():
 	_fine_str += _tmp_str
 	return str(_fine_str)
 
+def generate_random_name(_dirs):
+	_list_tmplt = os.listdir(_dirs)
+	_set_tmplt = set(_list_tmplt)
+	_gen_name = ""
+	while True:
+		_gen_name = genname()
+		if not _gen_name in _set_tmplt: break
+	_image_name = _gen_name + ".png"
+	return str(_image_name)
+
 def check_the_file(fname):
 	root_name = os.path.splitext(fname)[0]
 	root_ext = os.path.splitext(fname)[1]
@@ -157,16 +167,6 @@ def check_the_file(fname):
 	if root_result != False: return root_result
 	else:
 		return icon_file
-
-def generate_random_name(_dirs):
-	_list_tmplt = os.listdir(_dirs)
-	_set_tmplt = set(_list_tmplt)
-	_gen_name = ""
-	while True:
-		_gen_name = genname()
-		if not _gen_name in _set_tmplt: break
-	_image_name = _gen_name + ".png"
-	return str(_image_name)
 
 def getPathIcon(fName):
 	return os.path.join(icon_path,fName)
