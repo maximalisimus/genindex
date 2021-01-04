@@ -102,8 +102,8 @@ class Files:
 		return self.directory
 	
 	@staticmethod
-	def getPathIcon(fName):
-		return os.path.join(icon_path,fName)
+	def getPathIcon(fName, pathicon):
+		return os.path.join(pathicon,fName)
 	
 	@staticmethod
 	def getPathIndex(pathname):
@@ -335,7 +335,7 @@ def main():
 			print_of_help()
 			exit(1)
 		# in_file = 'build.sh'
-		# _str = Files.getPathIcon(icons.check_the_file(in_file))
+		# _str = Files.getPathIcon(icons.check_the_file(in_file),icon_path)
 		# print(Files.readFileBase64(_str))
 		# fileSize = Files.getFileSize(_str)
 		# modifyTime = Files.getDataTime(_str)
