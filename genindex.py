@@ -9,6 +9,12 @@ import math
 import time
 import random
 
+Author = "maximalisimus"
+Program_Name = "genindex"
+License = "GPL"
+About = "maximalis171091@mail.ru"
+VERSION = "1.0"
+
 _lng_str = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
 csvdata = []
@@ -18,6 +24,7 @@ _font = "sans-serif"
 _bgcolor = "white"
 _exclude_dir = []
 _exclude_file = []
+add_index = False
 
 icon_make = "r3i1s.png"
 icon_cmake = "w9c4z.png"
@@ -31,7 +38,6 @@ str_cmake = "Cmakelist"
 str_shasums = "sha"
 str_md5sums = "md5sums"
 
-VERSION = "1.0"
 PREFIX = os.path.realpath(os.path.dirname(sys.argv[0]))
 tmplate_dir = os.path.join(PREFIX,"template")
 html_header_file = os.path.join(tmplate_dir,"header.html")
@@ -48,10 +54,47 @@ def switch(case):
 		"-bgcolor": 3,
 		"-exclude-dir": 4,
 		"-exclude-file": 5,
-		"-genname": 6,
-		"-v": 7,
-		"-h": 8
+		"-adi": 6,
+		"-genname": 7,
+		"-v": 8,
+		"--v": 9,
+		"--version": 10,
+		"-version": 11,
+		"-h": 12,
+		"--h": 13,
+		"--help": 14,
+		"-help": 15
 	}.get(case, None)
+
+def print_of_help():
+	str_about = "Program: " + Program_Name + " , Version: v" + VERSION + "\n" + "License: " + License
+	str_fine = "About by: " + About
+	usage_one = "\tUsage genindex: \n\t\t[-dir directory] [-font font] [-bgcolor color]\n"
+	usage_two = "\t\t[exclude-dir dir] [-exclude-file file]\n"
+	usage_three = "\t\t[-adi] [-genname] [--version] [--help]"
+	usage_str = usage_one + usage_two + usage_three
+	print(str_about)
+	print(usage_str)
+	print("Options:")
+	print("\t-dir           - Working directory")
+	print("\t-font          - Font to index.html")
+	print("\t-bgcolor       - Background color to index.html")
+	print("\t-exclude-dir   - Excluding the specified directory \n\t\t\t from the destination file list index.html")
+	print("\t-exclude-file  - Excluding the specified file from the \n\t\t\t destination file list index.html")
+	print("\t-adi           - Adding a transition file \"/index.html\" \n\t\t\t to the folders")
+	print("\t-genname       - Generate a unique name for your icon image file \n\t\t\t that is not in the icon image templates folder")
+	print("\t-version       - Print the program version and exit")
+	print("\t-help          - Help")
+	print(str_fine)
+
+def print_of_version():
+	out_str = "Author: " + Author + "\n"
+	out_str_two = out_str + "Program: " + Program_Name + "\n"
+	out_str_free = out_str_two + "Version: v" + VERSION + "\n"
+	out_str_four = out_str_free + "License: " + License + "\n"
+	# About
+	out_str_full = out_str_four + "About by: " + About
+	print(out_str_full)
 
 def Enquiry(lis1):
 	if len(lis1) == 0:
@@ -136,82 +179,48 @@ def readFile(fName):
 		data = files.read()
 	return str(data)
 
-def writeFile(filePath, data):
-	with open(filePath, "a") as files:
-		files.write(data)
+def writeFile(filePath, data, mode_ = False):
+	if mode_:
+		with open(filePath, "a") as files:
+			files.write(data)
+	else:
+		with open(filePath, "w") as files:
+			files.write(data)
 
 def readFileBase64(fName):
 	with open(fName, "rb") as files:
 		data = files.read()
 	return base64.b64encode(data).decode("ascii")
 
-def work_in_dir(value_dir):
-	for dirpath, dirnames, filenames in os.walk(value_dir, True, None, False):
-		_real_dir = str(dirpath).replace(value_dir, "")
-		if Enquiry(_exclude_dir):
-			if not is_part_in_list(_real_dir, _exclude_dir):
-				for a in _exclude_dir:
-					if str(a).lower() in dirnames: dirnames.remove(a)
-				print("Каталог:", _real_dir)
-				if Enquiry(dirnames):
-					dirnames.sort()
-					for dirname in dirnames:
-						print("Direcory:", dirname)
-				else:
-					print("Directory is found!")
-				if Enquiry(filenames):
-					if Enquiry(_exclude_file):
-						_str_one = set(filenames)
-						_str_two = set(_exclude_file)
-						_new_filename = []
-						_new_filename.clear()
-						for key1 in _str_one:
-							if not is_part_in_list(str(key1),_str_two): _new_filename.append(key1)
-						_new_filename.sort()
-						for filename in _new_filename:
-							print("Filename:", filename)
-					else:
-						filenames.sort()
-						for filename in filenames:
-							print("Filename:", filename)
-		else:
-			print("Каталог:", _real_dir)
-			if Enquiry(dirnames):
-				dirnames.sort()
-				for dirname in dirnames:
-					print("Direcory:", dirname)
-			else:
-				print("Directory is found!")
-			if Enquiry(filenames):
-				if Enquiry(_exclude_file):
-					_str_one = set(filenames)
-					_str_two = set(_exclude_file)
-					_new_filename = []
-					_new_filename.clear()
-					for key1 in _str_one:
-						if not is_part_in_list(str(key1), _str_two): _new_filename.append(key1)
-					_new_filename.sort()
-					for filename in _new_filename:
-						print("Filename:", filename)
-				else:
-					filenames.sort()
-					for filename in filenames:
-						print("Filename:", filename)
-
 def main():
 	if len(sys.argv) > 2:
 		_generate_name = False
+		print_vers = False
+		print_help = False
 		for count in range(len(sys.argv)):
 			if switch(sys.argv[count]) == 1: directory = sys.argv[count + 1]
 			if switch(sys.argv[count]) == 2: _font = sys.argv[count + 1]
 			if switch(sys.argv[count]) == 3: _bgcolor = sys.argv[count + 1]
 			if switch(sys.argv[count]) == 4: _exclude_dir.append(sys.argv[count + 1])
 			if switch(sys.argv[count]) == 5: _exclude_file.append(sys.argv[count + 1])
-			if switch(sys.argv[count]) == 6: _generate_name = True
-			if switch(sys.argv[count]) == 7: print("Versions")
-			if switch(sys.argv[count]) == 8: print("Help!")
+			if switch(sys.argv[count]) == 6: add_index = True
+			if switch(sys.argv[count]) == 7: _generate_name = True
+			if switch(sys.argv[count]) == 8: print_vers = True
+			if switch(sys.argv[count]) == 9: print_vers = True
+			if switch(sys.argv[count]) == 10: print_vers = True
+			if switch(sys.argv[count]) == 11: print_vers = True
+			if switch(sys.argv[count]) == 12: print_help = True
+			if switch(sys.argv[count]) == 13: print_help = True
+			if switch(sys.argv[count]) == 14: print_help = True
+			if switch(sys.argv[count]) == 15: print_help = True
 		if _generate_name == True:
 			print(generate_random_name(icon_path))
+			exit(0)
+		if print_vers == True:
+			print_of_version()
+			exit(0)
+		if print_help == True:
+			print_of_help()
 			exit(0)
 		if not os.path.isdir(directory):
 			print("Parameter is not the directory", directory, "\nHelp")
@@ -225,7 +234,27 @@ def main():
 		# fileSize = str(math.floor(os.path.getsize(_str) / 1000)) + " kB"
 		# modifyTime = time.strftime('%d-%b-%Y %H:%M', time.localtime(os.path.getmtime(_str)))
 		# print(_str, modifyTime, fileSize)
-		# work_in_dir(directory)
+	else:
+		_generate_name = False
+		print_vers = False
+		print_help = False
+		for count in range(len(sys.argv)):
+			if switch(sys.argv[count]) == 7: _generate_name = True
+			if switch(sys.argv[count]) == 8: print_vers = True
+			if switch(sys.argv[count]) == 9: print_vers = True
+			if switch(sys.argv[count]) == 10: print_vers = True
+			if switch(sys.argv[count]) == 11: print_vers = True
+			if switch(sys.argv[count]) == 12: print_help = True
+			if switch(sys.argv[count]) == 13: print_help = True
+			if switch(sys.argv[count]) == 14: print_help = True
+			if switch(sys.argv[count]) == 15: print_help = True
+		if _generate_name == True:
+			print(generate_random_name(icon_path))
+		if print_vers == True:
+			print_of_version()
+		if print_help == True:
+			print_of_help()
+		exit(0)
 
 if __name__=="__main__":
 	main()
