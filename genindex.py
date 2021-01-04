@@ -3,6 +3,7 @@
 import csv
 import os
 import os.path
+import base64
 import sys
 import math
 import time
@@ -137,7 +138,7 @@ def writeFile(filePath, data):
 		files.write(data)
 
 def readFileBase64(fileName):
-	with open(ResourceManager.getFile(fileName), "rb") as files:
+	with open(fileName, "rb") as files:
 		data = files.read()
 	return base64.b64encode(data).decode("ascii")
 
@@ -217,6 +218,7 @@ def main():
 		# printcsv()
 		# in_file = 'build.sh'
 		# _str = getPathIcon(check_the_file(in_file))
+		# print(readFileBase64(_str))
 		# fileSize = str(math.floor(os.path.getsize(_str) / 1000)) + " kB"
 		# modifyTime = time.strftime('%d-%b-%Y %H:%M', time.localtime(os.path.getmtime(_str)))
 		# print(_str, modifyTime, fileSize)
