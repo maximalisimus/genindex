@@ -18,19 +18,27 @@ _bgcolor = "white"
 _exclude_dir = []
 _exclude_file = []
 
-csv_file = os.path.join("template","icons.csv")
-icon_path = os.path.join("template","image")
-
 icon_make = "r3i1s.png"
 icon_cmake = "w9c4z.png"
 icon_folder = "folder.png"
 icon_file = "file.png"
+icon_back = "back.png"
 icon_sums = "q6f3z.png"
 
 str_make = "Makefile"
 str_cmake = "Cmakelist"
 str_shasums = "sha"
 str_md5sums = "md5sums"
+
+VERSION = "1.0"
+PREFIX = os.path.realpath(os.path.dirname(sys.argv[0]))
+tmplate_dir = os.path.join(PREFIX,"template")
+html_header_file = os.path.join(tmplate_dir,"header.html")
+html_body_file = os.path.join(tmplate_dir,"body.html")
+html_footer_file = os.path.join(tmplate_dir,"footer.html")
+
+csv_file = os.path.join(tmplate_dir,"icons.csv")
+icon_path = os.path.join(tmplate_dir,"image")
 
 def switch(case):
 	return {
@@ -66,9 +74,6 @@ def compare( value, listname = csvdata):
 			if str(listname[i][j]).lower() == str(value)[1:].lower(): _tmp = listname[i][0] + ".png"
 	if Enquiry(_tmp): return _tmp
 	else: return False
-
-def stripCurrentDir(path):
-	return path.replace("./", "").replace("/.", "")
 
 def printcsv(listname = csvdata):
 	for i in range(len(listname)):
@@ -118,6 +123,23 @@ def generate_random_name(_dirs):
 		if not _gen_name in _set_tmplt: break
 	_image_name = _gen_name + ".png"
 	return str(_image_name)
+
+def getPathIcon(filename):
+	return os.path.join(icon_path,filename)
+
+def readFile(fileName):
+	with open(fileName, "r") as file:
+		data = file.read()
+	return str(data)
+
+def writeFile(filePath, data):
+	with open(filePath, "w") as files:
+		files.write(data)
+
+def readFileBase64(fileName):
+	with open(ResourceManager.getFile(fileName), "rb") as files:
+		data = files.read()
+	return base64.b64encode(data).decode("ascii")
 
 def work_in_dir(value_dir):
 	for dirpath, dirnames, filenames in os.walk(value_dir, True, None, False):
@@ -190,26 +212,16 @@ def main():
 		if not os.path.isdir(directory):
 			print("Parameter is not the directory", directory, "\nHelp")
 			exit(1)
-		# print("Font = " + _font)
-		# print("BGColor = " + _bgcolor)
-		# print("\nExclude dir:")
-		# print(_exclude_dir)
-		# print("\nExclude files: ")
-		# print(_exclude_file)
 		csv_reader(csv_file)
 		# print(csvdata)
 		# printcsv()
-		# _file = compare(".mui")
-		# if _file != "":
-		#	print(_file)
-		#	_str = os.path.join(icon_path,_file)
-		#	# _str = icon_path + _file
-		#	fileSize = str(math.floor(os.path.getsize(_str) / 1000)) + " kB"
-		#	modifyTime = time.strftime('%d-%b-%Y %H:%M', time.localtime(os.path.getmtime(_str)))
-		#	print(_str, modifyTime, fileSize)
+		# in_file = 'build.sh'
+		# _str = os.path.join(icon_path,check_the_file(in_file))
+		# _str = icon_path + _file
+		# fileSize = str(math.floor(os.path.getsize(_str) / 1000)) + " kB"
+		# modifyTime = time.strftime('%d-%b-%Y %H:%M', time.localtime(os.path.getmtime(_str)))
+		# print(_str, modifyTime, fileSize)
 		# work_in_dir(directory)
-		# in_file = 'sha256sums.txt'
-		# print(check_the_file(in_file))
 
 if __name__=="__main__":
 	main()
