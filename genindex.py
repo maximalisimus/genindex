@@ -134,7 +134,7 @@ def readFile(fileName):
 	return str(data)
 
 def writeFile(filePath, data):
-	with open(filePath, "w") as files:
+	with open(filePath, "a") as files:
 		files.write(data)
 
 def readFileBase64(fileName):
