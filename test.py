@@ -169,8 +169,8 @@ class IconFile:
 	def getIconBack(self):
 		return self.icon_back
 	
-	def csv_reader(self):
-		file_obj = csv_file
+	def csv_reader(self, file_obj = None):
+		if file_obj == None: file_obj = csv_file
 		with open(file_obj, "r") as csvfile:
 			csv_data = csv.reader(csvfile)	
 			for row in csv_data:
