@@ -216,8 +216,7 @@ def main():
 		# print(csvdata)
 		# printcsv()
 		# in_file = 'build.sh'
-		# _str = os.path.join(icon_path,check_the_file(in_file))
-		# _str = icon_path + _file
+		# _str = getPathIcon(check_the_file(in_file))
 		# fileSize = str(math.floor(os.path.getsize(_str) / 1000)) + " kB"
 		# modifyTime = time.strftime('%d-%b-%Y %H:%M', time.localtime(os.path.getmtime(_str)))
 		# print(_str, modifyTime, fileSize)
