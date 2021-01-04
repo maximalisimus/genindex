@@ -15,15 +15,15 @@ License = "GPL"
 About = "maximalis171091@mail.ru"
 VERSION = "1.0"
 
-directory = ""
-_font = "sans-serif"
-_bgcolor = "white"
-_exclude_dir = []
-_exclude_file = []
-add_index = False
-
 PREFIX = os.path.realpath(os.path.dirname(sys.argv[0]))
 tmplate_dir = os.path.join(PREFIX,"template")
+
+csv_file = os.path.join(tmplate_dir,"icons.csv")
+icon_path = os.path.join(tmplate_dir,"image")
+
+html_header_file = os.path.join(tmplate_dir,"header.html")
+html_body_file = os.path.join(tmplate_dir,"body.html")
+html_footer_file = os.path.join(tmplate_dir,"footer.html")
 
 def switch(case):
 	return {
@@ -47,7 +47,7 @@ def switch(case):
 def print_of_help():
 	str_about = "Program: " + Program_Name + " , Version: v" + VERSION + "\n" + "License: " + License
 	str_fine = "About by: " + About
-	usage_one = "\tUsage genindex: \n\t\t[-dir directory] [-font font] [-bgcolor color]\n"
+	usage_one = "\tUsage: \n\t\t[-dir directory] [-font font] [-bgcolor color]\n"
 	usage_two = "\t\t[exclude-dir dir] [-exclude-file file]\n"
 	usage_three = "\t\t[-adi] [-genname] [--version] [--help]"
 	usage_str = usage_one + usage_two + usage_three
@@ -74,7 +74,6 @@ def print_of_version():
 	out_str_two = out_str + "Program: " + Program_Name + "\n"
 	out_str_free = out_str_two + "Version: v" + VERSION + "\n"
 	out_str_four = out_str_free + "License: " + License + "\n"
-	# About
 	out_str_full = out_str_four + "About by: " + About
 	print(out_str_full)
 
@@ -96,12 +95,12 @@ class Resources:
 
 class Files:
 	
-	def __init__(self,value)
+	def __init__(self,value):
 		self.directory = str(value)
 	
 	def getDirectory(self):
 		return self.directory
-		
+	
 	@staticmethod
 	def getPathIcon(fName):
 		return os.path.join(icon_path,fName)
@@ -142,7 +141,7 @@ class Files:
 		return modifyTime
 		
 
-class IconFile(File):
+class IconFile:
 	
 	icon_make = "r3i1s.png"
 	icon_cmake = "w9c4z.png"
@@ -156,40 +155,35 @@ class IconFile(File):
 	str_shasums = "sha"
 	str_md5sums = "md5sums"
 	
-	csv_file = os.path.join(tmplate_dir,"icons.csv")
-	icon_path = os.path.join(tmplate_dir,"image")
-	
 	_lng_str = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 	
 	csvdata = []
 	
-	def __init__(self,dirs = self.icon_path):
-		supet().__init__(self,dirs)
-		self.csv_reader(self.csv_file)
+	def __init__(self, dirs = None):
+		if dirs == None: self.dirs = icon_path
+		else: self.dirs = dirs
 	
-	def csv_reader(file_obj):
+	def csv_reader(self):
+		file_obj = csv_file
 		with open(file_obj, "r") as csvfile:
 			csv_data = csv.reader(csvfile)	
 			for row in csv_data:
 				# print(row) # Debug
-				# csvdata.append(row)
+				# self.csvdata.append(row)
 				#print(str(' '.join(row)).split(' '))
 				self.csvdata.append(str(' '.join(row)).split(' '))
 	
-	def printcsv(listname = self.csvdata):
-		for i in range(len(listname)):
-			# print(listname[i][0], end = '\n')
-			for j in range(len(listname[i])):
-				print(listname[i][j], end = '\n')
+	def printcsv(self):
+		for i in range(len(self.csvdata)):
+			# print(self.csvdata[i][0], end = '\n')
+			for j in range(len(self.csvdata[i])):
+				print(self.csvdata[i][j], end = '\n')
 	
-	def csvprint(self):
-		self.printcsv()
-	
-	def compare(value, listname = self.csvdata):
+	def compare(self, value):
 		_tmp = ""
-		for i in range(len(listname)):
-			for j in range(len(listname[i])):
-				if str(listname[i][j]).lower() == str(value)[1:].lower(): _tmp = listname[i][0] + ".png"
+		for i in range(len(self.csvdata)):
+			for j in range(len(self.csvdata[i])):
+				if str(self.csvdata[i][j]).lower() == str(value)[1:].lower(): _tmp = self.csvdata[i][0] + ".png"
 		if Resources.Enquiry(_tmp): return _tmp
 		else: return False
 
@@ -204,7 +198,7 @@ class IconFile(File):
 		if root_result != False: return root_result
 		else: return self.icon_file
 
-	def genname():
+	def genname(self):
 		_fine_str = ""
 		counter = 0
 		_tmp_str = random.choice(self._lng_str)
@@ -219,8 +213,9 @@ class IconFile(File):
 		_fine_str += _tmp_str
 		return str(_fine_str)
 
-	def generate_random_name(self, _dirs = self.icon_path):
-		_list_tmplt = os.listdir(_dirs)
+	def generate_random_name(self, _dirs = None):
+		if _dirs == None: _list_tmplt = os.listdir(icon_path)
+		else: _list_tmplt = os.listdir(_dirs)
 		_set_tmplt = set(_list_tmplt)
 		_gen_name = ""
 		while True:
@@ -229,78 +224,113 @@ class IconFile(File):
 		_image_name = _gen_name + ".png"
 		return str(_image_name)
 
-class htmlOgject(File):
+class htmlOgject(Files):
 	
-	html_header_file = os.path.join(tmplate_dir,"header.html")
-	html_body_file = os.path.join(tmplate_dir,"body.html")
-	html_footer_file = os.path.join(tmplate_dir,"footer.html")
-	
-	def __init__(self, startpath):
+	def __init__(self, startpath, fonts = "sans-serif", bg_color = "white", addindex = False):
 		super().__init__(self,startpath)
+		self.fonts = fonts
+		self.bgcolor = bg_color
+		self.add_index = addindex
 	
+	def setFonts(self, value):
+		self.fonts = value
+		
+	def getFonts(self):
+		return self.fonts
+		
+	def setBGColor(self, colors):
+		self.bgcolor = colors
 	
+	def getBGColor(self):
+		return self.bgcolor
+	
+	def setAddIndex(self, value):
+		self.add_index = value
+	
+	def getAddIndex(self):
+		return self.add_index
+
+class Arguments:
+	
+	def __init__(self, list_argv):
+		self.args = list_argv
+		self.directory = ""
+		self.fonts = ""
+		self.bgcolor = ""
+		self.exclude_dir = []
+		self.exclude_file = []
+		self.add_index = False
+		self.generate_name = False
+		self.print_vers = False
+		self.print_help = False
+	
+	def getDirectory(self):
+		return self.directory
+	
+	def isDirectory(self):
+		if Resources.Enquiry(self.directory): return True
+		else: return False
+	
+	def getGenName(self):
+		return self.generate_name
+	
+	def getPrintVers(self):
+		return self.print_vers
+	
+	def getPrintHelp(self):
+		return self.print_help
+	
+	def checkArgs(self):
+		for count in range(len(self.args)):
+			if switch(self.args[count]) == 1: self.directory = self.args[count + 1]
+			if switch(self.args[count]) == 2: self.fonts = self.args[count + 1]
+			if switch(self.args[count]) == 3: self.bgcolor = self.args[count + 1]
+			if switch(self.args[count]) == 4: self.exclude_dir.append(self.args[count + 1])
+			if switch(self.args[count]) == 5: self.exclude_file.append(self.args[count + 1])
+			if switch(self.args[count]) == 6: self.add_index = True
+			if switch(self.args[count]) == 7: self.generate_name = True
+			if switch(self.args[count]) == 8: self.print_vers = True
+			if switch(self.args[count]) == 9: self.print_vers = True
+			if switch(self.args[count]) == 10: self.print_vers = True
+			if switch(self.args[count]) == 11: self.print_vers = True
+			if switch(self.args[count]) == 12: self.print_help = True
+			if switch(self.args[count]) == 13: self.print_help = True
+			if switch(self.args[count]) == 14: self.print_help = True
+			if switch(self.args[count]) == 15: self.print_help = True
 	
 def main():
 	if len(sys.argv) > 2:
-		_generate_name = False
-		print_vers = False
-		print_help = False
-		for count in range(len(sys.argv)):
-			if switch(sys.argv[count]) == 1: directory = sys.argv[count + 1]
-			if switch(sys.argv[count]) == 2: _font = sys.argv[count + 1]
-			if switch(sys.argv[count]) == 3: _bgcolor = sys.argv[count + 1]
-			if switch(sys.argv[count]) == 4: _exclude_dir.append(sys.argv[count + 1])
-			if switch(sys.argv[count]) == 5: _exclude_file.append(sys.argv[count + 1])
-			if switch(sys.argv[count]) == 6: add_index = True
-			if switch(sys.argv[count]) == 7: _generate_name = True
-			if switch(sys.argv[count]) == 8: print_vers = True
-			if switch(sys.argv[count]) == 9: print_vers = True
-			if switch(sys.argv[count]) == 10: print_vers = True
-			if switch(sys.argv[count]) == 11: print_vers = True
-			if switch(sys.argv[count]) == 12: print_help = True
-			if switch(sys.argv[count]) == 13: print_help = True
-			if switch(sys.argv[count]) == 14: print_help = True
-			if switch(sys.argv[count]) == 15: print_help = True
-		if _generate_name == True:
-			print(generate_random_name(icon_path))
+		any_args = Arguments(sys.argv)
+		any_args.checkArgs()
+		icons = IconFile()
+		icons.csv_reader()
+		if any_args.getGenName() == True:
+			print(icons.generate_random_name())
 			exit(0)
-		if print_vers == True:
+		if any_args.getPrintVers() == True:
 			print_of_version()
 			exit(0)
-		if print_help == True:
+		if any_args.getPrintHelp() == True:
 			print_of_help()
 			exit(0)
-		if not os.path.isdir(directory):
-			print("Parameter is not the directory", directory, "\nHelp")
+		if not os.path.isdir(any_args.getDirectory()):
+			print("Parameter is not the directory", any_args.getDirectory(), "\n")
+			print_of_help()
 			exit(1)
-		csv_reader(csv_file)
-		# print(csvdata)
-		# printcsv()
 		# in_file = 'build.sh'
-		# _str = getPathIcon(check_the_file(in_file))
-		# print(readFileBase64(_str))
-		# fileSize = str(math.floor(os.path.getsize(_str) / 1000)) + " kB"
-		# modifyTime = time.strftime('%d-%b-%Y %H:%M', time.localtime(os.path.getmtime(_str)))
+		# _str = Files.getPathIcon(icons.check_the_file(in_file))
+		# print(Files.readFileBase64(_str))
+		# fileSize = Files.getFileSize(_str)
+		# modifyTime = Files.getDataTime(_str)
 		# print(_str, modifyTime, fileSize)
 	else:
-		_generate_name = False
-		print_vers = False
-		print_help = False
-		for count in range(len(sys.argv)):
-			if switch(sys.argv[count]) == 7: _generate_name = True
-			if switch(sys.argv[count]) == 8: print_vers = True
-			if switch(sys.argv[count]) == 9: print_vers = True
-			if switch(sys.argv[count]) == 10: print_vers = True
-			if switch(sys.argv[count]) == 11: print_vers = True
-			if switch(sys.argv[count]) == 12: print_help = True
-			if switch(sys.argv[count]) == 13: print_help = True
-			if switch(sys.argv[count]) == 14: print_help = True
-			if switch(sys.argv[count]) == 15: print_help = True
-		if _generate_name == True:
-			print(generate_random_name(icon_path))
-		if print_vers == True:
+		any_args = Arguments(sys.argv)
+		any_args.checkArgs()
+		if any_args.getGenName() == True:
+			print(icons.generate_random_name())
+		if any_args.getPrintVers() == True:
 			print_of_version()
-		if print_help == True:
+		if any_args.getPrintHelp() == True:
 			print_of_help()
 		exit(0)
 
