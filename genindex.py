@@ -125,20 +125,23 @@ def generate_random_name(_dirs):
 	_image_name = _gen_name + ".png"
 	return str(_image_name)
 
-def getPathIcon(filename):
-	return os.path.join(icon_path,filename)
+def getPathIcon(fName):
+	return os.path.join(icon_path,fName)
 
-def readFile(fileName):
-	with open(fileName, "r") as file:
-		data = file.read()
+def getPathIndex(pathname):
+	return os.path.join(os.path.realpath(pathname),"index.html")
+
+def readFile(fName):
+	with open(fName, "r") as files:
+		data = files.read()
 	return str(data)
 
 def writeFile(filePath, data):
 	with open(filePath, "a") as files:
 		files.write(data)
 
-def readFileBase64(fileName):
-	with open(fileName, "rb") as files:
+def readFileBase64(fName):
+	with open(fName, "rb") as files:
 		data = files.read()
 	return base64.b64encode(data).decode("ascii")
 
