@@ -178,7 +178,7 @@ class IconFile:
 				#print(str(' '.join(row)).split(' '))
 				self.csvdata.append(str(' '.join(row)).split(' '))
 	
-	def printcsv(self):
+	def printCSV(self):
 		for i in range(len(self.csvdata)):
 			# print(self.csvdata[i][0], end = '\n')
 			for j in range(len(self.csvdata[i])):
@@ -290,7 +290,7 @@ class Arguments:
 	def getExcFile(self):
 		return self.exclude_file
 
-	def genname(self):
+	def genName(self):
 		_fine_str = ""
 		counter = 0
 		_tmp_str = random.choice(self._lng_str)
@@ -310,7 +310,7 @@ class Arguments:
 		_set_tmplt = set(_list_tmplt)
 		_gen_name = ""
 		while True:
-			_gen_name = self.genname()
+			_gen_name = self.genName()
 			if not _gen_name in _set_tmplt: break
 		_image_name = _gen_name + ".png"
 		return str(_image_name)
