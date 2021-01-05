@@ -426,6 +426,17 @@ class Arguments:
 			print_of_help()
 			exit(0)
 
+def list_files(startPath):
+	newPath = str(pathlib.Path(startPath).resolve())
+	for root, dirs, files in os.walk(newPath, True, None, False):
+		level = root.replace(newPath, '').count(os.sep)
+		indent = ' ' * 2 * (level)
+		subIndent = ' ' * 2 * (level + 1)
+		print('{}{}/'.format(indent, pathlib.Path(root).stem))
+		files.sort()
+		for f in files:
+			print('{}{}'.format(subIndent, f))
+
 def main():
 	any_args = Arguments(sys.argv)
 	if len(any_args.args) > 2:
@@ -441,6 +452,7 @@ def main():
 		# fileSize = Files.getFileSize(_str)
 		# modifyTime = Files.getDataTime(_str)
 		# print(_str, modifyTime, fileSize)
+		# list_files("./")
 
 if __name__=="__main__":
 	main()
