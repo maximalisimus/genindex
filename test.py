@@ -248,13 +248,15 @@ class htmlOgject:
 		self.htmlfooter = self.htmlfooter.replace("#VERSION", VERSION)
 
 	def setFonts(self, value):
-		self.fonts = value
+		if Resources.Enquiry(value): self.fonts = value
+		else: self.fonts = "sans-serif"
 		
 	def getFonts(self):
 		return self.fonts
 		
 	def setBGColor(self, colors):
-		self.bgcolor = colors
+		if Resources.Enquiry(colors): self.bgcolor = colors
+		else: self.bgcolor = "white"
 	
 	def getBGColor(self):
 		return self.bgcolor
@@ -280,14 +282,16 @@ class Arguments:
 		self.print_help = False
 		self.icons = IconFile()
 		self.checkArgs()
-	
+
+	def getFonts(self):
+		return self.fonts
+
+	def getBGCOLOR(self):
+		return self.bgcolor
+
 	def getDirectory(self):
 		return self.directory
-	
-	def isDirectory(self):
-		if Resources.Enquiry(self.directory): return True
-		else: return False
-	
+
 	def getGenName(self):
 		return self.generate_name
 	
@@ -353,6 +357,9 @@ def main():
 	any_args = Arguments(sys.argv)
 	if len(any_args.args) > 2:
 		# html = htmlOgject(any_args.getDirectory())
+		# html.setFonts(any_args.getFonts())
+		# html.setBGColor(any_args.getBGCOLOR())
+		# html.setAddIndex(any_args.getAddIndex())
 		# in_file = 'build.sh'
 		# _str = Files.getPathIcon(any_args.icons.check_the_file(in_file),icon_path)
 		# print(Files.readFileBase64(_str))
