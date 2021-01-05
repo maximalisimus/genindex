@@ -400,22 +400,33 @@ class Arguments:
 			exit(1)
 
 	def checkArgs(self):
-		for count in range(len(self.args)):
-			if switch(self.args[count]) == 1: self.checkDirs(self.args[count + 1])
-			if switch(self.args[count]) == 2: self.fonts = self.args[count + 1]
-			if switch(self.args[count]) == 3: self.bgcolor = self.args[count + 1]
-			if switch(self.args[count]) == 4: self.exclude_dir.append(self.args[count + 1])
-			if switch(self.args[count]) == 5: self.exclude_file.append(self.args[count + 1])
-			if switch(self.args[count]) == 6: self.add_index = True
-			if switch(self.args[count]) == 7: self.generate_name = True
-			if switch(self.args[count]) == 8: self.printOfVers = True
-			if switch(self.args[count]) == 9: self.printOfVers = True
-			if switch(self.args[count]) == 10: self.printOfVers = True
-			if switch(self.args[count]) == 11: self.printOfVers = True
-			if switch(self.args[count]) == 12: self.printOfHelp = True
-			if switch(self.args[count]) == 13: self.printOfHelp = True
-			if switch(self.args[count]) == 14: self.printOfHelp = True
-			if switch(self.args[count]) == 15: self.printOfHelp = True
+		if len(self.args) > 2:
+			for count in range(len(self.args)):
+				if switch(self.args[count]) == 1: self.checkDirs(self.args[count + 1])
+				if switch(self.args[count]) == 2: self.fonts = self.args[count + 1]
+				if switch(self.args[count]) == 3: self.bgcolor = self.args[count + 1]
+				if switch(self.args[count]) == 4: self.exclude_dir.append(self.args[count + 1])
+				if switch(self.args[count]) == 5: self.exclude_file.append(self.args[count + 1])
+				if switch(self.args[count]) == 6: self.add_index = True
+				if switch(self.args[count]) == 7: self.generate_name = True
+				if switch(self.args[count]) == 8: self.printOfVers = True
+				if switch(self.args[count]) == 9: self.printOfVers = True
+				if switch(self.args[count]) == 10: self.printOfVers = True
+				if switch(self.args[count]) == 11: self.printOfVers = True
+				if switch(self.args[count]) == 12: self.printOfHelp = True
+				if switch(self.args[count]) == 13: self.printOfHelp = True
+				if switch(self.args[count]) == 14: self.printOfHelp = True
+				if switch(self.args[count]) == 15: self.printOfHelp = True
+		else:
+			if switch(self.args[1]) == 7: self.generate_name = True
+			if switch(self.args[1]) == 8: self.printOfVers = True
+			if switch(self.args[1]) == 9: self.printOfVers = True
+			if switch(self.args[1]) == 10: self.printOfVers = True
+			if switch(self.args[1]) == 11: self.printOfVers = True
+			if switch(self.args[1]) == 12: self.printOfHelp = True
+			if switch(self.args[1]) == 13: self.printOfHelp = True
+			if switch(self.args[1]) == 14: self.printOfHelp = True
+			if switch(self.args[1]) == 15: self.printOfHelp = True
 		if self.getGenName():
 			print(self.generate_random_name())
 			exit(0)
