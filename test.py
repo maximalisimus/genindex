@@ -278,8 +278,8 @@ class Arguments:
 		self.generate_name = False
 		self.print_vers = False
 		self.print_help = False
-		self.checkArgs()
 		self.icons = IconFile()
+		self.checkArgs()
 	
 	def getDirectory(self):
 		return self.directory
@@ -339,20 +339,21 @@ class Arguments:
 			if switch(self.args[count]) == 13: self.print_help = True
 			if switch(self.args[count]) == 14: self.print_help = True
 			if switch(self.args[count]) == 15: self.print_help = True
-	
-def main():
-	if len(sys.argv) > 2:
-		any_args = Arguments(sys.argv)
-		if any_args.getGenName():
-			print(any_args.icons.generate_random_name())
+		if self.getGenName():
+			print(self.icons.generate_random_name())
 			exit(0)
-		if any_args.getPrintVers():
+		if self.getPrintVers():
 			print_of_version()
 			exit(0)
-		if any_args.getPrintHelp():
+		if self.getPrintHelp():
 			print_of_help()
 			exit(0)
-		# html = htmlOgject(any_args.getDirectory())
+	
+def main():
+	any_args = Arguments(sys.argv)
+	if len(any_args.args) > 2:
+		html = htmlOgject(any_args.getDirectory())
+		print(html.getFonts())
 		# in_file = 'build.sh'
 		# _str = Files.getPathIcon(any_args.icons.check_the_file(in_file),icon_path)
 		# print(Files.readFileBase64(_str))
@@ -360,13 +361,6 @@ def main():
 		# modifyTime = Files.getDataTime(_str)
 		# print(_str, modifyTime, fileSize)
 	else:
-		any_args = Arguments(sys.argv)
-		if any_args.getGenName() == True:
-			print(any_args.icons.generate_random_name())
-		if any_args.getPrintVers() == True:
-			print_of_version()
-		if any_args.getPrintHelp() == True:
-			print_of_help()
 		exit(0)
 
 if __name__=="__main__":
