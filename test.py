@@ -94,13 +94,11 @@ class Resources:
 		return False
 
 class Files:
-	
-	def __init__(self,value):
-		self.directory = str(value)
-	
-	def getDirectory(self):
-		return self.directory
-	
+
+	@staticmethod
+	def stripCurrentDir(paths):
+		return paths.replace("./", "").replace("/.", "")
+
 	@staticmethod
 	def getPathIcon(fName, pathicon):
 		return os.path.join(pathicon,fName)
@@ -108,7 +106,11 @@ class Files:
 	@staticmethod
 	def getPathIndex(pathname):
 		return os.path.join(os.path.realpath(pathname),"index.html")
-	
+
+	@staticmethod
+	def getRealPath(pathname):
+		return os.path.realpath(pathname)
+
 	@staticmethod
 	def readFile(fName):
 		with open(fName, "r") as files:
@@ -162,6 +164,7 @@ class IconFile:
 	def __init__(self, dirs = None):
 		if dirs == None: self.dirs = icon_path
 		else: self.dirs = dirs
+		self.csv_reader()
 	
 	def getIconFolder(self):
 		return self.icon_folder
@@ -230,14 +233,20 @@ class IconFile:
 		_image_name = _gen_name + ".png"
 		return str(_image_name)
 
-class htmlOgject(Files):
-	
+class htmlOgject:
+
+	htmlheader = Files.readFile(html_header_file)
+	htmlbody = Files.readFile(html_body_file)
+	htmlfooter = Files.readFile(html_footer_file)
+
 	def __init__(self, startpath, fonts = "sans-serif", bg_color = "white", addindex = False):
-		super().__init__(self,startpath)
+		self.startpath = Files.getRealPath(startpath)
 		self.fonts = fonts
 		self.bgcolor = bg_color
 		self.add_index = addindex
-	
+		self.htmlheader = self.htmlheader.replace("#FONTS", fonts).replace("#BGCOLOR",bg_color)
+		self.htmlfooter = self.htmlfooter.replace("#VERSION", VERSION)
+
 	def setFonts(self, value):
 		self.fonts = value
 		
@@ -269,6 +278,8 @@ class Arguments:
 		self.generate_name = False
 		self.print_vers = False
 		self.print_help = False
+		self.checkArgs()
+		self.icons = IconFile()
 	
 	def getDirectory(self):
 		return self.directory
@@ -302,10 +313,18 @@ class Arguments:
 	
 	def getExcFile(self):
 		return self.exclude_file
-	
+
+	def checkDirs(self, dirnames):
+		if Resources.Enquiry(dirnames):
+			if not os.path.isdir(dirnames):
+				print("Parameter is not the directory <", dirnames, "> !!! \n")
+				print_of_help()
+				exit(1)
+			else: self.directory = Files.getRealPath(dirnames)
+
 	def checkArgs(self):
 		for count in range(len(self.args)):
-			if switch(self.args[count]) == 1: self.directory = self.args[count + 1]
+			if switch(self.args[count]) == 1: self.checkDirs(self.args[count + 1])
 			if switch(self.args[count]) == 2: self.fonts = self.args[count + 1]
 			if switch(self.args[count]) == 3: self.bgcolor = self.args[count + 1]
 			if switch(self.args[count]) == 4: self.exclude_dir.append(self.args[count + 1])
@@ -324,33 +343,26 @@ class Arguments:
 def main():
 	if len(sys.argv) > 2:
 		any_args = Arguments(sys.argv)
-		any_args.checkArgs()
-		icons = IconFile()
-		icons.csv_reader()
-		if any_args.getGenName() == True:
-			print(icons.generate_random_name())
+		if any_args.getGenName():
+			print(any_args.icons.generate_random_name())
 			exit(0)
-		if any_args.getPrintVers() == True:
+		if any_args.getPrintVers():
 			print_of_version()
 			exit(0)
-		if any_args.getPrintHelp() == True:
+		if any_args.getPrintHelp():
 			print_of_help()
 			exit(0)
-		if not os.path.isdir(any_args.getDirectory()):
-			print("Parameter is not the directory", any_args.getDirectory(), "\n")
-			print_of_help()
-			exit(1)
+		# html = htmlOgject(any_args.getDirectory())
 		# in_file = 'build.sh'
-		# _str = Files.getPathIcon(icons.check_the_file(in_file),icon_path)
+		# _str = Files.getPathIcon(any_args.icons.check_the_file(in_file),icon_path)
 		# print(Files.readFileBase64(_str))
 		# fileSize = Files.getFileSize(_str)
 		# modifyTime = Files.getDataTime(_str)
 		# print(_str, modifyTime, fileSize)
 	else:
 		any_args = Arguments(sys.argv)
-		any_args.checkArgs()
 		if any_args.getGenName() == True:
-			print(icons.generate_random_name())
+			print(any_args.icons.generate_random_name())
 		if any_args.getPrintVers() == True:
 			print_of_version()
 		if any_args.getPrintHelp() == True:
