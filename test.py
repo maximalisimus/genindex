@@ -44,15 +44,24 @@ def switch(case):
 		"-help": 15
 	}.get(case, None)
 
-def print_of_help():
-	str_about = "Program: " + Program_Name + " , Version: v" + VERSION + "\n" + "License: " + License
-	str_fine = "About by: " + About
-	usage_one = "\tUsage: \n\t\t[-dir directory] [-font font] [-bgcolor color]\n"
-	usage_two = "\t\t[exclude-dir dir] [-exclude-file file]\n"
-	usage_three = "\t\t[-adi] [-genname] [--version] [--help]"
+def printUsage():
+	usage_one = "\tUsage (genindex): \n\t\t[-dir directory] [-font font] [-bgcolor color]\n"
+	usage_two = "\t\t[-exclude-dir dir] [-exclude-file file]\n"
+	usage_three = "\t\t[-adi] [-genname] [-version] [-help]"
 	usage_str = usage_one + usage_two + usage_three
-	print(str_about)
 	print(usage_str)
+
+def printInfoApps():
+	str_about = "Program: " + Program_Name + " , Version: v" + VERSION + "\n" + "License: " + License
+	print(str_about)
+
+def printAbout():
+	str_fine = "About by: " + About
+	print(str_fine)
+
+def print_of_help():
+	printInfoApps()
+	printUsage()
 	print("Options:")
 	print("\t-dir           - Working directory")
 	print("\t-font          - Font to index.html")
@@ -67,7 +76,7 @@ def print_of_help():
 	print("\t                 that is not in the icon image templates folder")
 	print("\t-version       - Print the program version and exit")
 	print("\t-help          - Help")
-	print(str_fine)
+	printAbout()
 
 def print_of_version():
 	out_str = "Author: " + Author + "\n"
@@ -335,13 +344,18 @@ class Arguments:
 	def checkDirs(self, dirNames):
 		if Resources.Enquiry(dirNames):
 			if not os.path.isdir(dirNames):
-				print("Parameter is not the directory <", dirNames, "> !!! \n")
-				print_of_help()
+				print("\033[31mParameter is not the directory <", dirNames, "> !!!\033[0m")
+				print("\033[31mPlease input the working directory !!!\033[0m")
+				printInfoApps()
+				printUsage()
+				printAbout()
 				exit(1)
 			else: self.directory = Files.getRealPath(dirNames)
 		else:
-			print("Please enter the work on directory !!! \n")
-			print_of_help()
+			print("\033[31mYou have not input any working directory !!!\nPlease input the working directory !!!\033[0m \n")
+			printInfoApps()
+			printUsage()
+			printAbout()
 			exit(1)
 
 	def checkArgs(self):
