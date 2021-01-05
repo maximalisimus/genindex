@@ -100,8 +100,9 @@ class Files:
 		return paths.replace("./", "").replace("/.", "")
 
 	@staticmethod
-	def getPathIcon(fName, pathicon):
-		return os.path.join(pathicon,fName)
+	def getPathIcon(fName, pathIcon = None):
+		if pathIcon == None: return os.path.join(icon_path,fName)
+		else: return os.path.join(pathIcon,fName)
 	
 	@staticmethod
 	def getPathIndex(pathname):
@@ -378,7 +379,7 @@ def main():
 		html.setBGColor(any_args.getBGCOLOR())
 		html.setAddIndex(any_args.getAddIndex())
 		# in_file = 'build.sh'
-		# _str = Files.getPathIcon(html.icons.check_the_file(in_file),icon_path)
+		# _str = Files.getPathIcon(html.icons.check_the_file(in_file))
 		# print(Files.readFileBase64(_str))
 		# _str = Files.getRealPath("/home/mikl/git_ssh/aur-packages/x86_64/apindex-2.2-1-any.pkg.tar.zst")
 		# fileSize = Files.getFileSize(_str)
