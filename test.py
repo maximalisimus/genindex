@@ -352,8 +352,7 @@ class Arguments:
 def main():
 	any_args = Arguments(sys.argv)
 	if len(any_args.args) > 2:
-		html = htmlOgject(any_args.getDirectory())
-		print(html.getFonts())
+		# html = htmlOgject(any_args.getDirectory())
 		# in_file = 'build.sh'
 		# _str = Files.getPathIcon(any_args.icons.check_the_file(in_file),icon_path)
 		# print(Files.readFileBase64(_str))
