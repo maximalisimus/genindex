@@ -322,6 +322,10 @@ class Arguments:
 				print_of_help()
 				exit(1)
 			else: self.directory = Files.getRealPath(dirnames)
+		else:
+			print("Please enter the work on directory !!! \n")
+			print_of_help()
+			exit(1)
 
 	def checkArgs(self):
 		for count in range(len(self.args)):
