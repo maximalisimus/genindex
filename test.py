@@ -156,14 +156,10 @@ class IconFile:
 	str_cmake = "Cmakelist"
 	str_shasums = "sha"
 	str_md5sums = "md5sums"
-	
-	_lng_str = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-	
+
 	csvdata = []
 	
-	def __init__(self, dirs = None):
-		if dirs == None: self.dirs = icon_path
-		else: self.dirs = dirs
+	def __init__(self):
 		self.csv_reader()
 	
 	def getIconFolder(self):
@@ -207,32 +203,6 @@ class IconFile:
 		if root_result != False: return root_result
 		else: return self.icon_file
 
-	def genname(self):
-		_fine_str = ""
-		counter = 0
-		_tmp_str = random.choice(self._lng_str)
-		_fine_str += _tmp_str
-		counter = random.randint(0, 9)
-		_fine_str += str(counter)
-		_tmp_str = random.choice(self._lng_str)
-		_fine_str += _tmp_str
-		counter = random.randint(0, 9)
-		_fine_str += str(counter)
-		_tmp_str = random.choice(self._lng_str)
-		_fine_str += _tmp_str
-		return str(_fine_str)
-
-	def generate_random_name(self, _dirs = None):
-		if _dirs == None: _list_tmplt = os.listdir(icon_path)
-		else: _list_tmplt = os.listdir(_dirs)
-		_set_tmplt = set(_list_tmplt)
-		_gen_name = ""
-		while True:
-			_gen_name = self.genname()
-			if not _gen_name in _set_tmplt: break
-		_image_name = _gen_name + ".png"
-		return str(_image_name)
-
 class htmlOgject:
 
 	htmlheader = Files.readFile(html_header_file)
@@ -246,6 +216,7 @@ class htmlOgject:
 		self.add_index = addindex
 		self.htmlheader = self.htmlheader.replace("#FONTS", fonts).replace("#BGCOLOR",bg_color)
 		self.htmlfooter = self.htmlfooter.replace("#VERSION", VERSION)
+		self.icons = IconFile()
 
 	def setFonts(self, value):
 		if Resources.Enquiry(value): self.fonts = value
@@ -268,7 +239,9 @@ class htmlOgject:
 		return self.add_index
 
 class Arguments:
-	
+
+	_lng_str = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+
 	def __init__(self, list_argv):
 		self.args = list_argv
 		self.directory = ""
@@ -280,7 +253,6 @@ class Arguments:
 		self.generate_name = False
 		self.print_vers = False
 		self.print_help = False
-		self.icons = IconFile()
 		self.checkArgs()
 
 	def getFonts(self):
@@ -318,6 +290,31 @@ class Arguments:
 	def getExcFile(self):
 		return self.exclude_file
 
+	def genname(self):
+		_fine_str = ""
+		counter = 0
+		_tmp_str = random.choice(self._lng_str)
+		_fine_str += _tmp_str
+		counter = random.randint(0, 9)
+		_fine_str += str(counter)
+		_tmp_str = random.choice(self._lng_str)
+		_fine_str += _tmp_str
+		counter = random.randint(0, 9)
+		_fine_str += str(counter)
+		_tmp_str = random.choice(self._lng_str)
+		_fine_str += _tmp_str
+		return str(_fine_str)
+
+	def generate_random_name(self):
+		_list_tmplt = os.listdir(icon_path)
+		_set_tmplt = set(_list_tmplt)
+		_gen_name = ""
+		while True:
+			_gen_name = self.genname()
+			if not _gen_name in _set_tmplt: break
+		_image_name = _gen_name + ".png"
+		return str(_image_name)
+
 	def checkDirs(self, dirnames):
 		if Resources.Enquiry(dirnames):
 			if not os.path.isdir(dirnames):
@@ -344,7 +341,7 @@ class Arguments:
 			if switch(self.args[count]) == 14: self.print_help = True
 			if switch(self.args[count]) == 15: self.print_help = True
 		if self.getGenName():
-			print(self.icons.generate_random_name())
+			print(self.generate_random_name())
 			exit(0)
 		if self.getPrintVers():
 			print_of_version()
@@ -352,22 +349,20 @@ class Arguments:
 		if self.getPrintHelp():
 			print_of_help()
 			exit(0)
-	
+
 def main():
 	any_args = Arguments(sys.argv)
 	if len(any_args.args) > 2:
-		# html = htmlOgject(any_args.getDirectory())
-		# html.setFonts(any_args.getFonts())
-		# html.setBGColor(any_args.getBGCOLOR())
-		# html.setAddIndex(any_args.getAddIndex())
+		html = htmlOgject(any_args.getDirectory())
+		html.setFonts(any_args.getFonts())
+		html.setBGColor(any_args.getBGCOLOR())
+		html.setAddIndex(any_args.getAddIndex())
 		# in_file = 'build.sh'
-		# _str = Files.getPathIcon(any_args.icons.check_the_file(in_file),icon_path)
+		# _str = Files.getPathIcon(html.icons.check_the_file(in_file),icon_path)
 		# print(Files.readFileBase64(_str))
 		# fileSize = Files.getFileSize(_str)
 		# modifyTime = Files.getDataTime(_str)
 		# print(_str, modifyTime, fileSize)
-	else:
-		exit(0)
 
 if __name__=="__main__":
 	main()
