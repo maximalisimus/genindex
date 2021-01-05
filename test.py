@@ -131,11 +131,27 @@ class Files:
 		with open(fName, "rb") as files:
 			data = files.read()
 		return base64.b64encode(data).decode("ascii")
-	
+
 	@staticmethod
-	def getFileSize(fName):
-		fSize = str(math.floor(os.path.getsize(fName) / 1000)) + " kB"
-		return fSize
+	def convertBytes(numeric):
+		"""
+		this function will convert bytes to MB.... GB... etc
+		"""
+		for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+			if numeric < 1024.0:
+				return "{0:3.1f} {1}".format(numeric,x)
+			numeric /= 1024.0
+
+	@staticmethod
+	def getFileSize(filePath):
+		# fSize = str(math.floor(os.path.getsize(fName) / 1000)) + " kB"
+		# return fSize
+		"""
+		this function will return the file size
+		"""
+		if os.path.isfile(filePath):
+			file_info = os.stat(filePath)
+			return Files.convertBytes(file_info.st_size)
 	
 	@staticmethod
 	def getDataTime(fName):
@@ -364,6 +380,7 @@ def main():
 		# in_file = 'build.sh'
 		# _str = Files.getPathIcon(html.icons.check_the_file(in_file),icon_path)
 		# print(Files.readFileBase64(_str))
+		# _str = Files.getRealPath("/home/mikl/git_ssh/aur-packages/x86_64/apindex-2.2-1-any.pkg.tar.zst")
 		# fileSize = Files.getFileSize(_str)
 		# modifyTime = Files.getDataTime(_str)
 		# print(_str, modifyTime, fileSize)
