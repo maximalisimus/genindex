@@ -192,9 +192,9 @@ class IconFile:
 		if Resources.Enquiry(_tmp): return _tmp
 		else: return False
 
-	def check_the_file(self, fname):
-		root_name = os.path.splitext(fname)[0]
-		root_ext = os.path.splitext(fname)[1]
+	def check_the_file(self, fName):
+		root_name = os.path.splitext(fName)[0]
+		root_ext = os.path.splitext(fName)[1]
 		if self.str_make.lower() in str(root_name).lower(): return self.icon_make
 		if self.str_cmake.lower() in str(root_name).lower(): return self.icon_cmake
 		if self.str_shasums.lower() in str(root_name).lower(): return self.icon_sums
@@ -205,17 +205,17 @@ class IconFile:
 
 class htmlOgject:
 
-	htmlheader = Files.readFile(html_header_file)
-	htmlbody = Files.readFile(html_body_file)
-	htmlfooter = Files.readFile(html_footer_file)
+	htmlHeader = Files.readFile(html_header_file)
+	htmlBody = Files.readFile(html_body_file)
+	htmlFooter = Files.readFile(html_footer_file)
 
-	def __init__(self, startpath, fonts = "sans-serif", bg_color = "white", addindex = False):
-		self.startpath = Files.getRealPath(startpath)
+	def __init__(self, startPath, fonts = "sans-serif", bg_color = "white", addIndex = False):
+		self.startPath = Files.getRealPath(startPath)
 		self.fonts = fonts
 		self.bgcolor = bg_color
-		self.add_index = addindex
-		self.htmlheader = self.htmlheader.replace("#FONTS", fonts).replace("#BGCOLOR",bg_color)
-		self.htmlfooter = self.htmlfooter.replace("#VERSION", VERSION)
+		self.add_index = addIndex
+		self.htmlHeader = self.htmlHeader.replace("#FONTS", fonts).replace("#BGCOLOR",bg_color)
+		self.htmlFooter = self.htmlFooter.replace("#VERSION", VERSION)
 		self.icons = IconFile()
 
 	def setFonts(self, value):
@@ -315,13 +315,13 @@ class Arguments:
 		_image_name = _gen_name + ".png"
 		return str(_image_name)
 
-	def checkDirs(self, dirnames):
-		if Resources.Enquiry(dirnames):
-			if not os.path.isdir(dirnames):
-				print("Parameter is not the directory <", dirnames, "> !!! \n")
+	def checkDirs(self, dirNames):
+		if Resources.Enquiry(dirNames):
+			if not os.path.isdir(dirNames):
+				print("Parameter is not the directory <", dirNames, "> !!! \n")
 				print_of_help()
 				exit(1)
-			else: self.directory = Files.getRealPath(dirnames)
+			else: self.directory = Files.getRealPath(dirNames)
 		else:
 			print("Please enter the work on directory !!! \n")
 			print_of_help()
