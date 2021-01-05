@@ -2,7 +2,7 @@
 
 import csv
 import os
-import os.path
+# import os.path
 import pathlib
 import base64
 import sys
@@ -240,8 +240,10 @@ class IconFile:
 		else: return False
 
 	def check_the_file(self, fName):
-		root_name = os.path.splitext(str(fName))[0]
-		root_ext = os.path.splitext(str(fName))[1]
+		root_name = pathlib.Path(fName).stem
+		root_ext = pathlib.Path(fName).suffix
+		# root_name = os.path.splitext(str(fName))[0]
+		# root_ext = os.path.splitext(str(fName))[1]
 		if self.str_make.lower() in str(root_name).lower(): return self.icon_make
 		if self.str_cmake.lower() in str(root_name).lower(): return self.icon_cmake
 		if self.str_shasums.lower() in str(root_name).lower(): return self.icon_sums
@@ -431,9 +433,9 @@ def main():
 		html.setFonts(any_args.getFonts())
 		html.setBGColor(any_args.getBGCOLOR())
 		html.setAddIndex(any_args.getAddIndex())
-		in_file = 'build.sh'
-		_str = Files.getPathIcon(html.icons.check_the_file(in_file))
-		print(_str)
+		# in_file = 'build.sh.tar.gz'
+		# _str = Files.getPathIcon(html.icons.check_the_file(in_file))
+		# print(_str)
 		# print(Files.readFileBase64(_str))
 		# _str = Files.getRealPath("/home/mikl/git_ssh/aur-packages/x86_64/apindex-2.2-1-any.pkg.tar.zst")
 		# fileSize = Files.getFileSize(_str)
