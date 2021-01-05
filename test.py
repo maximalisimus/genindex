@@ -251,8 +251,8 @@ class Arguments:
 		self.exclude_file = []
 		self.add_index = False
 		self.generate_name = False
-		self.print_vers = False
-		self.print_help = False
+		self.printOfVers = False
+		self.printOfHelp = False
 		self.checkArgs()
 
 	def getFonts(self):
@@ -271,10 +271,10 @@ class Arguments:
 		return self.add_index
 	
 	def getPrintVers(self):
-		return self.print_vers
+		return self.printOfVers
 	
 	def getPrintHelp(self):
-		return self.print_help
+		return self.printOfHelp
 	
 	def isExcDir(self):
 		if Resources.Enquiry(self.exclude_dir): return True
@@ -336,14 +336,14 @@ class Arguments:
 			if switch(self.args[count]) == 5: self.exclude_file.append(self.args[count + 1])
 			if switch(self.args[count]) == 6: self.add_index = True
 			if switch(self.args[count]) == 7: self.generate_name = True
-			if switch(self.args[count]) == 8: self.print_vers = True
-			if switch(self.args[count]) == 9: self.print_vers = True
-			if switch(self.args[count]) == 10: self.print_vers = True
-			if switch(self.args[count]) == 11: self.print_vers = True
-			if switch(self.args[count]) == 12: self.print_help = True
-			if switch(self.args[count]) == 13: self.print_help = True
-			if switch(self.args[count]) == 14: self.print_help = True
-			if switch(self.args[count]) == 15: self.print_help = True
+			if switch(self.args[count]) == 8: self.printOfVers = True
+			if switch(self.args[count]) == 9: self.printOfVers = True
+			if switch(self.args[count]) == 10: self.printOfVers = True
+			if switch(self.args[count]) == 11: self.printOfVers = True
+			if switch(self.args[count]) == 12: self.printOfHelp = True
+			if switch(self.args[count]) == 13: self.printOfHelp = True
+			if switch(self.args[count]) == 14: self.printOfHelp = True
+			if switch(self.args[count]) == 15: self.printOfHelp = True
 		if self.getGenName():
 			print(self.generate_random_name())
 			exit(0)
