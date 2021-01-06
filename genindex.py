@@ -2,12 +2,14 @@
 
 import csv
 import os
-import os.path
+# import os.path
+import pathlib
 import base64
 import sys
-import math
+# import math
 import time
 import random
+import platform
 
 Author = "maximalisimus"
 Program_Name = "genindex"
@@ -15,37 +17,26 @@ License = "GPL"
 About = "maximalis171091@mail.ru"
 VERSION = "1.0"
 
-_lng_str = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+# PREFIX = os.path.realpath(os.path.dirname(sys.argv[0]))
+PREFIX = str(pathlib.Path(sys.argv[0]).resolve()).replace(pathlib.Path(sys.argv[0]).name,'')
+# tmplate_dir = os.path.join(PREFIX,"template")
+template_Dir = str(pathlib.Path(PREFIX).joinpath("template"))
+modules_Dir = str(pathlib.Path(PREFIX).joinpath("modules"))
+sys.path.append(modules_Dir)
 
-csvdata = []
+if platform.system() == 'Windows':
+	import cmdcolor
+# csv_file = os.path.join(template_Dir,"icons.csv")
+# icon_path = os.path.join(template_Dir,"image")
+csv_file = str(pathlib.Path(template_Dir).joinpath("icons.csv"))
+icon_path = str(pathlib.Path(template_Dir).joinpath("image"))
 
-directory = ""
-_font = "sans-serif"
-_bgcolor = "white"
-_exclude_dir = []
-_exclude_file = []
-add_index = False
-
-icon_make = "r3i1s.png"
-icon_cmake = "w9c4z.png"
-icon_folder = "folder.png"
-icon_file = "file.png"
-icon_back = "back.png"
-icon_sums = "q6f3z.png"
-
-str_make = "Makefile"
-str_cmake = "Cmakelist"
-str_shasums = "sha"
-str_md5sums = "md5sums"
-
-PREFIX = os.path.realpath(os.path.dirname(sys.argv[0]))
-tmplate_dir = os.path.join(PREFIX,"template")
-html_header_file = os.path.join(tmplate_dir,"header.html")
-html_body_file = os.path.join(tmplate_dir,"body.html")
-html_footer_file = os.path.join(tmplate_dir,"footer.html")
-
-csv_file = os.path.join(tmplate_dir,"icons.csv")
-icon_path = os.path.join(tmplate_dir,"image")
+# html_header_file = os.path.join(template_Dir,"header.html")
+# html_body_file = os.path.join(template_Dir,"body.html")
+# html_footer_file = os.path.join(template_Dir,"footer.html")
+html_Header_File = str(pathlib.Path(template_Dir).joinpath("header.html"))
+html_Body_File = str(pathlib.Path(template_Dir).joinpath("body.html"))
+html_Footer_File = str(pathlib.Path(template_Dir).joinpath("footer.html"))
 
 def switch(case):
 	return {
@@ -66,15 +57,24 @@ def switch(case):
 		"-help": 15
 	}.get(case, None)
 
-def print_of_help():
-	str_about = "Program: " + Program_Name + " , Version: v" + VERSION + "\n" + "License: " + License
-	str_fine = "About by: " + About
-	usage_one = "\tUsage genindex: \n\t\t[-dir directory] [-font font] [-bgcolor color]\n"
-	usage_two = "\t\t[exclude-dir dir] [-exclude-file file]\n"
-	usage_three = "\t\t[-adi] [-genname] [--version] [--help]"
+def printUsage():
+	usage_one = "\tUsage (genindex): \n\t\t[-dir directory] [-font font] [-bgcolor color]\n"
+	usage_two = "\t\t[-exclude-dir dir] [-exclude-file file]\n"
+	usage_three = "\t\t[-adi] [-genname] [-version] [-help]"
 	usage_str = usage_one + usage_two + usage_three
-	print(str_about)
 	print(usage_str)
+
+def printInfoApps():
+	str_about = "Program: " + Program_Name + " , Version: v" + VERSION + "\n" + "License: " + License
+	print(str_about)
+
+def printAbout():
+	str_fine = "About by: " + About
+	print(str_fine)
+
+def print_of_help():
+	printInfoApps()
+	printUsage()
 	print("Options:")
 	print("\t-dir           - Working directory")
 	print("\t-font          - Font to index.html")
@@ -89,176 +89,391 @@ def print_of_help():
 	print("\t                 that is not in the icon image templates folder")
 	print("\t-version       - Print the program version and exit")
 	print("\t-help          - Help")
-	print(str_fine)
+	printAbout()
 
 def print_of_version():
 	out_str = "Author: " + Author + "\n"
 	out_str_two = out_str + "Program: " + Program_Name + "\n"
 	out_str_free = out_str_two + "Version: v" + VERSION + "\n"
 	out_str_four = out_str_free + "License: " + License + "\n"
-	# About
 	out_str_full = out_str_four + "About by: " + About
 	print(out_str_full)
 
-def Enquiry(lis1):
-	if len(lis1) == 0:
-		return 0
-	else:
-		return 1
+class Resources:
+	
+	@staticmethod
+	def Enquiry(lis1):
+		if len(lis1) == 0:
+			return 0
+		else:
+			return 1
+	
+	@staticmethod
+	def is_part_in_list(str_, words):
+		for word in words:
+			if word.lower() in str_.lower():
+				return True
+		return False
 
-def csv_reader(file_obj):
-	with open(file_obj, "r") as csvfile:
-		csv_data = csv.reader(csvfile)	
-		for row in csv_data:
-			# print(row) # Debug
-			# csvdata.append(row)
-			#print(str(' '.join(row)).split(' '))
-			csvdata.append(str(' '.join(row)).split(' '))
+class Files:
 
-def compare( value, listname = csvdata):
-	_tmp = ""
-	for i in range(len(listname)):
-		for j in range(len(listname[i])):
-			if str(listname[i][j]).lower() == str(value)[1:].lower(): _tmp = listname[i][0] + ".png"
-	if Enquiry(_tmp): return _tmp
-	else: return False
+	@staticmethod
+	def stripCurrentDir(paths):
+		return str(paths).replace("./", "").replace("/.", "")
 
-def printcsv(listname = csvdata):
-	for i in range(len(listname)):
-		# print(listname[i][0], end = '\n')
-		for j in range(len(listname[i])):
-			print(listname[i][j], end = '\n')
+	@staticmethod
+	def getPathIcon(fName, pathIcon = None):
+		if pathIcon == None: return str(pathlib.Path(icon_path).joinpath(fName))
+		else: return str(pathlib.Path(pathIcon).joinpath(fName))
+		# if pathIcon == None: return os.path.join(icon_path,fName)
+		# else: return os.path.join(pathIcon,fName)
+	
+	@staticmethod
+	def getPathIndex(pathname):
+		return str(pathlib.Path(pathname).resolve().joinpath("index.html"))
+		# return os.path.join(os.path.realpath(pathname),"index.html")
 
-def is_part_in_list(str_, words):
-	for word in words:
-		if word.lower() in str_.lower():
-			return True
-	return False
+	@staticmethod
+	def getRealPath(pathname):
+		return str(pathlib.Path(pathname).resolve())
+		# return os.path.realpath(pathname)
 
-def genname():
-	_fine_str = ""
-	counter = 0
-	_tmp_str = random.choice(_lng_str)
-	_fine_str += _tmp_str
-	counter = random.randint(0, 9)
-	_fine_str += str(counter)
-	_tmp_str = random.choice(_lng_str)
-	_fine_str += _tmp_str
-	counter = random.randint(0, 9)
-	_fine_str += str(counter)
-	_tmp_str = random.choice(_lng_str)
-	_fine_str += _tmp_str
-	return str(_fine_str)
+	@staticmethod
+	def readFile(fName):
+		with open(str(pathlib.Path(fName)), "r") as files:
+			data = files.read()
+		return str(data)
+	
+	@staticmethod
+	def writeFile(filePath, data, mode_ = False):
+		if mode_:
+			with open(str(pathlib.Path(filePath)), "a") as files:
+				files.write(data)
+		else:
+			with open(str(pathlib.Path(filePath)), "w") as files:
+				files.write(data)
+	
+	@staticmethod
+	def readFileBase64(fName):
+		with open(str(pathlib.Path(fName)), "rb") as files:
+			data = files.read()
+		return base64.b64encode(data).decode("ascii")
 
-def generate_random_name(_dirs):
-	_list_tmplt = os.listdir(_dirs)
-	_set_tmplt = set(_list_tmplt)
-	_gen_name = ""
-	while True:
-		_gen_name = genname()
-		if not _gen_name in _set_tmplt: break
-	_image_name = _gen_name + ".png"
-	return str(_image_name)
+	@staticmethod
+	def convertBytes(numeric):
+		"""
+		this function will convert bytes to MB.... GB... etc
+		"""
+		for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+			if numeric < 1024.0:
+				return "{0:3.1f} {1}".format(numeric,x)
+			numeric /= 1024.0
 
-def check_the_file(fname):
-	root_name = os.path.splitext(fname)[0]
-	root_ext = os.path.splitext(fname)[1]
-	if str_make.lower() in str(root_name).lower(): return icon_make
-	if str_cmake.lower() in str(root_name).lower(): return icon_cmake
-	if str_shasums.lower() in str(root_name).lower(): return icon_sums
-	if str_md5sums.lower() in str(root_name).lower(): return icon_sums
-	root_result = compare(root_ext)
-	if root_result != False: return root_result
-	else:
-		return icon_file
+	@staticmethod
+	def getFileSize(filePath):
+		# fSize = str(math.floor(os.path.getsize(fName) / 1000)) + " kB"
+		# return fSize
+		"""
+		this function will return the file size
+		"""
+		if pathlib.Path(filePath).is_file():
+			file_Info = pathlib.Path(filePath).stat().st_size
+			return Files.convertBytes(file_Info)
+		# if os.path.isfile(filePath):
+		#	file_info = os.stat(filePath)
+		#	return Files.convertBytes(file_info.st_size)
+	
+	@staticmethod
+	def getDataTime(fName):
+		mod_Time = time.strftime('%d-%b-%Y %H:%M', time.localtime(pathlib.Path(fName).stat().st_mtime))
+		return mod_Time
+		# modifyTime = time.strftime('%d-%b-%Y %H:%M', time.localtime(os.path.getmtime(fName)))
+		# return modifyTime
 
-def getPathIcon(fName):
-	return os.path.join(icon_path,fName)
+class IconFile:
 
-def getPathIndex(pathname):
-	return os.path.join(os.path.realpath(pathname),"index.html")
+	icon_make = "r3i1s.png"
+	icon_cmake = "w9c4z.png"
+	icon_folder = "folder.png"
+	icon_file = "file.png"
+	icon_back = "back.png"
+	icon_sums = "q6f3z.png"
 
-def readFile(fName):
-	with open(fName, "r") as files:
-		data = files.read()
-	return str(data)
+	str_make = "Makefile"
+	str_cmake = "Cmakelist"
+	str_shasums = "sha"
+	str_md5sums = "md5sums"
 
-def writeFile(filePath, data, mode_ = False):
-	if mode_:
-		with open(filePath, "a") as files:
-			files.write(data)
-	else:
-		with open(filePath, "w") as files:
-			files.write(data)
+	csvdata = []
 
-def readFileBase64(fName):
-	with open(fName, "rb") as files:
-		data = files.read()
-	return base64.b64encode(data).decode("ascii")
+	# def __init__(self, csvFiles = None):
+	#	if csvFiles != None: self.csv_reader(str(pathlib.Path(csvFiles)))
+	#	else: self.csv_reader()
+
+	def __del__(self):
+		del self
+
+	def getIconFolder(self):
+		return self.icon_folder
+	
+	def getIconBack(self):
+		return self.icon_back
+	
+	def csv_reader(self, file_obj):
+		self.csvdata.clear()
+		with open(file_obj, "r") as csvFile:
+			csv_data = csv.reader(csvFile)
+			for row in csv_data:
+				# print(row) # Debug
+				# self.csvdata.append(row)
+				#print(str(' '.join(row)).split(' '))
+				self.csvdata.append(str(' '.join(row)).split(' '))
+	
+	def printCSV(self):
+		for i in range(len(self.csvdata)):
+			# print(self.csvdata[i][0], end = '\n')
+			for j in range(len(self.csvdata[i])):
+				print(self.csvdata[i][j], end = '\n')
+	
+	def compare(self, value):
+		_tmp = ""
+		for i in range(len(self.csvdata)):
+			for j in range(len(self.csvdata[i])):
+				if str(self.csvdata[i][j]).lower() == str(value)[1:].lower(): _tmp = self.csvdata[i][0] + ".png"
+		if Resources.Enquiry(_tmp): return _tmp
+		else: return False
+
+	def check_the_file(self, fName):
+		root_name = pathlib.Path(fName).stem
+		root_ext = pathlib.Path(fName).suffix
+		# root_name = os.path.splitext(str(fName))[0]
+		# root_ext = os.path.splitext(str(fName))[1]
+		if self.str_make.lower() in str(root_name).lower(): return self.icon_make
+		if self.str_cmake.lower() in str(root_name).lower(): return self.icon_cmake
+		if self.str_shasums.lower() in str(root_name).lower(): return self.icon_sums
+		if self.str_md5sums.lower() in str(root_name).lower(): return self.icon_sums
+		root_result = self.compare(root_ext)
+		if root_result != False: return root_result
+		else: return self.icon_file
+
+class htmlOgject:
+
+	htmlHeader = Files.readFile(html_Header_File)
+	htmlBody = Files.readFile(html_Body_File)
+	htmlFooter = Files.readFile(html_Footer_File)
+
+	def __init__(self, startPath, iconCSVPath = None, fonts = "sans-serif", bg_color = "white", addIndex = False):
+		self.startPath = Files.getRealPath(startPath)
+		self.fonts = fonts
+		self.bgcolor = bg_color
+		self.add_index = addIndex
+		self.htmlHeader = self.htmlHeader.replace("#FONTS", fonts).replace("#BGCOLOR",bg_color)
+		self.htmlFooter = self.htmlFooter.replace("#VERSION", VERSION)
+		self.icons = IconFile()
+		if iconCSVPath == None: self.iconInit(str(pathlib.Path("../template/icons.csv").resolve()))
+		else: self.iconInit(iconCSVPath)
+
+	def iconInit(self,csvConfigFile = None):
+		if csvConfigFile != None: self.icons.csv_reader(str(pathlib.Path(csvConfigFile)))
+
+	def setFonts(self, value):
+		if Resources.Enquiry(value): self.fonts = value
+		else: self.fonts = "sans-serif"
+		
+	def getFonts(self):
+		return self.fonts
+		
+	def setBGColor(self, colors):
+		if Resources.Enquiry(colors): self.bgcolor = colors
+		else: self.bgcolor = "white"
+	
+	def getBGColor(self):
+		return self.bgcolor
+	
+	def setAddIndex(self, value):
+		self.add_index = value
+	
+	def getAddIndex(self):
+		return self.add_index
+
+class Arguments:
+
+	_lng_str = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+
+	def __init__(self, list_argv):
+		self.args = list_argv
+		self.directory = ""
+		self.fonts = ""
+		self.bgcolor = ""
+		self.exclude_dir = []
+		self.exclude_file = []
+		self.add_index = False
+		self.generate_name = False
+		self.printOfVers = False
+		self.printOfHelp = False
+		self.checkArgs()
+
+	def getFonts(self):
+		return self.fonts
+
+	def getBGCOLOR(self):
+		return self.bgcolor
+
+	def getDirectory(self):
+		return self.directory
+
+	def getGenName(self):
+		return self.generate_name
+	
+	def getAddIndex(self):
+		return self.add_index
+	
+	def getPrintVers(self):
+		return self.printOfVers
+	
+	def getPrintHelp(self):
+		return self.printOfHelp
+	
+	def isExcDir(self):
+		if Resources.Enquiry(self.exclude_dir): return True
+		else: return False
+	
+	def getExcDir(self):
+		return self.exclude_dir
+	
+	def isExcFile(self):
+		if Resources.Enquiry(self.exclude_file): return True
+		else: return False
+	
+	def getExcFile(self):
+		return self.exclude_file
+
+	def genName(self):
+		_fine_str = ""
+		counter = 0
+		_tmp_str = random.choice(self._lng_str)
+		_fine_str += _tmp_str
+		counter = random.randint(0, 9)
+		_fine_str += str(counter)
+		_tmp_str = random.choice(self._lng_str)
+		_fine_str += _tmp_str
+		counter = random.randint(0, 9)
+		_fine_str += str(counter)
+		_tmp_str = random.choice(self._lng_str)
+		_fine_str += _tmp_str
+		return str(_fine_str)
+
+	def generate_random_name(self):
+		_list_tmplt = os.listdir(icon_path)
+		_set_tmplt = set(_list_tmplt)
+		_gen_name = ""
+		while True:
+			_gen_name = self.genName()
+			if not _gen_name in _set_tmplt: break
+		_image_name = _gen_name + ".png"
+		return str(_image_name)
+
+	def checkDirs(self, dirNames):
+		if Resources.Enquiry(dirNames):
+			if not pathlib.Path(dirNames).exists():
+			# if not os.path.isdir(dirNames):
+				if platform.system() == 'Windows':
+					cmdcolor.setCMDColor(12)
+					print("Parameter is not the directory <", dirNames, "> !!!")
+					print("Please input the working directory !!!")
+					cmdcolor.setCMDColor(15)
+				else:
+					print("\033[31m",end = "")
+					print("Parameter is not the directory <", dirNames, "> !!!")
+					print("Please input the working directory !!!")
+					print("\033[0m", end = "")
+				printInfoApps()
+				printUsage()
+				printAbout()
+				exit(1)
+			else: self.directory = Files.getRealPath(dirNames)
+		else:
+			if platform.system() == 'Windows':
+				cmdcolor.setCMDColor(12)
+				print("You have not input any working directory !!!")
+				print("Please input the working directory !!!\n")
+				cmdcolor.setCMDColor(15)
+			else:
+				print("\033[31m", end="")
+				print("You have not input any working directory !!!")
+				print("Please input the working directory !!!\n")
+				print("\033[0m", end="")
+			printInfoApps()
+			printUsage()
+			printAbout()
+			exit(1)
+
+	def checkArgs(self):
+		if len(self.args) > 2:
+			for count in range(len(self.args)):
+				if switch(self.args[count]) == 1: self.checkDirs(self.args[count + 1])
+				if switch(self.args[count]) == 2: self.fonts = self.args[count + 1]
+				if switch(self.args[count]) == 3: self.bgcolor = self.args[count + 1]
+				if switch(self.args[count]) == 4: self.exclude_dir.append(self.args[count + 1])
+				if switch(self.args[count]) == 5: self.exclude_file.append(self.args[count + 1])
+				if switch(self.args[count]) == 6: self.add_index = True
+				if switch(self.args[count]) == 7: self.generate_name = True
+				if switch(self.args[count]) == 8: self.printOfVers = True
+				if switch(self.args[count]) == 9: self.printOfVers = True
+				if switch(self.args[count]) == 10: self.printOfVers = True
+				if switch(self.args[count]) == 11: self.printOfVers = True
+				if switch(self.args[count]) == 12: self.printOfHelp = True
+				if switch(self.args[count]) == 13: self.printOfHelp = True
+				if switch(self.args[count]) == 14: self.printOfHelp = True
+				if switch(self.args[count]) == 15: self.printOfHelp = True
+		else:
+			if switch(self.args[1]) == 7: self.generate_name = True
+			if switch(self.args[1]) == 8: self.printOfVers = True
+			if switch(self.args[1]) == 9: self.printOfVers = True
+			if switch(self.args[1]) == 10: self.printOfVers = True
+			if switch(self.args[1]) == 11: self.printOfVers = True
+			if switch(self.args[1]) == 12: self.printOfHelp = True
+			if switch(self.args[1]) == 13: self.printOfHelp = True
+			if switch(self.args[1]) == 14: self.printOfHelp = True
+			if switch(self.args[1]) == 15: self.printOfHelp = True
+		if self.getGenName():
+			print(self.generate_random_name())
+			exit(0)
+		if self.getPrintVers():
+			print_of_version()
+			exit(0)
+		if self.getPrintHelp():
+			print_of_help()
+			exit(0)
+
+def list_files(startPath):
+	newPath = str(pathlib.Path(startPath).resolve())
+	for root, dirs, files in os.walk(newPath, True, None, False):
+		level = root.replace(newPath, '').count(os.sep)
+		indent = ' ' * 2 * (level)
+		subIndent = ' ' * 2 * (level + 1)
+		print('{}{}/'.format(indent, pathlib.Path(root).stem))
+		files.sort()
+		for f in files:
+			print('{}{}'.format(subIndent, f))
 
 def main():
-	if len(sys.argv) > 2:
-		_generate_name = False
-		print_vers = False
-		print_help = False
-		for count in range(len(sys.argv)):
-			if switch(sys.argv[count]) == 1: directory = sys.argv[count + 1]
-			if switch(sys.argv[count]) == 2: _font = sys.argv[count + 1]
-			if switch(sys.argv[count]) == 3: _bgcolor = sys.argv[count + 1]
-			if switch(sys.argv[count]) == 4: _exclude_dir.append(sys.argv[count + 1])
-			if switch(sys.argv[count]) == 5: _exclude_file.append(sys.argv[count + 1])
-			if switch(sys.argv[count]) == 6: add_index = True
-			if switch(sys.argv[count]) == 7: _generate_name = True
-			if switch(sys.argv[count]) == 8: print_vers = True
-			if switch(sys.argv[count]) == 9: print_vers = True
-			if switch(sys.argv[count]) == 10: print_vers = True
-			if switch(sys.argv[count]) == 11: print_vers = True
-			if switch(sys.argv[count]) == 12: print_help = True
-			if switch(sys.argv[count]) == 13: print_help = True
-			if switch(sys.argv[count]) == 14: print_help = True
-			if switch(sys.argv[count]) == 15: print_help = True
-		if _generate_name == True:
-			print(generate_random_name(icon_path))
-			exit(0)
-		if print_vers == True:
-			print_of_version()
-			exit(0)
-		if print_help == True:
-			print_of_help()
-			exit(0)
-		if not os.path.isdir(directory):
-			print("Parameter is not the directory", directory, "\nHelp")
-			exit(1)
-		csv_reader(csv_file)
-		# print(csvdata)
-		# printcsv()
-		# in_file = 'build.sh'
-		# _str = getPathIcon(check_the_file(in_file))
-		# print(readFileBase64(_str))
-		# fileSize = str(math.floor(os.path.getsize(_str) / 1000)) + " kB"
-		# modifyTime = time.strftime('%d-%b-%Y %H:%M', time.localtime(os.path.getmtime(_str)))
+	any_args = Arguments(sys.argv)
+	if len(any_args.args) > 2:
+		html = htmlOgject(any_args.getDirectory(), csv_file)
+		html.setFonts(any_args.getFonts())
+		html.setBGColor(any_args.getBGCOLOR())
+		html.setAddIndex(any_args.getAddIndex())
+		# print(html.getFonts())
+		# in_file = 'build.sh.tar.gz'
+		# _str = Files.getPathIcon(html.icons.check_the_file(in_file))
+		# print(_str)
+		# print(Files.readFileBase64(_str))
+		# _str = Files.getRealPath("/home/mikl/git_ssh/aur-packages/x86_64/apindex-2.2-1-any.pkg.tar.zst")
+		# fileSize = Files.getFileSize(_str)
+		# modifyTime = Files.getDataTime(_str)
 		# print(_str, modifyTime, fileSize)
-	else:
-		_generate_name = False
-		print_vers = False
-		print_help = False
-		for count in range(len(sys.argv)):
-			if switch(sys.argv[count]) == 7: _generate_name = True
-			if switch(sys.argv[count]) == 8: print_vers = True
-			if switch(sys.argv[count]) == 9: print_vers = True
-			if switch(sys.argv[count]) == 10: print_vers = True
-			if switch(sys.argv[count]) == 11: print_vers = True
-			if switch(sys.argv[count]) == 12: print_help = True
-			if switch(sys.argv[count]) == 13: print_help = True
-			if switch(sys.argv[count]) == 14: print_help = True
-			if switch(sys.argv[count]) == 15: print_help = True
-		if _generate_name == True:
-			print(generate_random_name(icon_path))
-		if print_vers == True:
-			print_of_version()
-		if print_help == True:
-			print_of_help()
-		exit(0)
+		# list_files("./")
 
 if __name__=="__main__":
 	main()
