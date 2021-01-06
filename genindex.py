@@ -262,7 +262,7 @@ class htmlOgject:
 	htmlBody = Files.readFile(html_Body_File)
 	htmlFooter = Files.readFile(html_Footer_File)
 
-	def __init__(self, startPath, iconCSVPath = None, fonts = "sans-serif", bg_color = "white", addIndex = False):
+	def __init__(self, startPath, iconCSVConfig = None, fonts = "sans-serif", bg_color = "white", addIndex = False):
 		self.startPath = Files.getRealPath(startPath)
 		self.fonts = fonts
 		self.bgcolor = bg_color
@@ -270,8 +270,8 @@ class htmlOgject:
 		self.htmlHeader = self.htmlHeader.replace("#FONTS", fonts).replace("#BGCOLOR",bg_color)
 		self.htmlFooter = self.htmlFooter.replace("#VERSION", VERSION)
 		self.icons = IconFile()
-		if iconCSVPath == None: self.iconInit(str(pathlib.Path("../template/icons.csv").resolve()))
-		else: self.iconInit(iconCSVPath)
+		if iconCSVConfig == None: self.iconInit(str(pathlib.Path("./template/icons.csv").resolve()))
+		else: self.iconInit(iconCSVConfig)
 
 	def __del__(self):
 		del self
@@ -303,7 +303,7 @@ class Arguments:
 
 	_lng_str = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
-	def __init__(self, list_argv):
+	def __init__(self, IconFolder = None, list_argv = []):
 		self.args = list_argv
 		self.directory = ""
 		self.fonts = ""
@@ -314,6 +314,8 @@ class Arguments:
 		self.generate_name = False
 		self.printOfVers = False
 		self.printOfHelp = False
+		if IconFolder == None: self.iconFolder = str(pathlib.Path("./template/image/").resolve())
+		else: self.iconFolder = str(pathlib.Path(IconFolder).resolve())
 		self.checkArgs()
 
 	def __del__(self):
@@ -370,7 +372,7 @@ class Arguments:
 		return str(_fine_str)
 
 	def generate_random_name(self):
-		_list_tmplt = os.listdir(icon_path)
+		_list_tmplt = os.listdir(self.iconFolder)
 		_set_tmplt = set(_list_tmplt)
 		_gen_name = ""
 		while True:
@@ -464,13 +466,15 @@ def list_files(startPath):
 			print('{}{}'.format(subIndent, f))
 
 def main():
-	any_args = Arguments(sys.argv)
+	any_args = Arguments(icon_path, sys.argv)
+	# any_args = Arguments(None, sys.argv)
 	if len(any_args.args) > 2:
-		html = htmlOgject(any_args.getDirectory(), csv_file)
+		# html = htmlOgject(any_args.getDirectory(), csv_file)
+		html = htmlOgject(any_args.getDirectory())
 		html.setFonts(any_args.getFonts())
 		html.setBGColor(any_args.getBGCOLOR())
 		html.setAddIndex(any_args.getAddIndex())
-		# print(html.getFonts())
+		print(html.getFonts())
 		# in_file = 'build.sh.tar.gz'
 		# _str = Files.getPathIcon(html.icons.check_the_file(in_file))
 		# print(_str)
