@@ -270,7 +270,7 @@ class htmlOgject:
 		self.htmlHeader = self.htmlHeader.replace("#FONTS", fonts).replace("#BGCOLOR",bg_color)
 		self.htmlFooter = self.htmlFooter.replace("#VERSION", VERSION)
 		self.icons = IconFile()
-		if iconCSVConfig == None: self.iconInit(str(pathlib.Path("./template/icons.csv").resolve()))
+		if iconCSVConfig == None: self.iconInit("./template/icons.csv")
 		else: self.iconInit(iconCSVConfig)
 
 	def __del__(self):
