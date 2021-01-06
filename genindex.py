@@ -273,6 +273,9 @@ class htmlOgject:
 		if iconCSVPath == None: self.iconInit(str(pathlib.Path("../template/icons.csv").resolve()))
 		else: self.iconInit(iconCSVPath)
 
+	def __del__(self):
+		del self
+
 	def iconInit(self,csvConfigFile = None):
 		if csvConfigFile != None: self.icons.csv_reader(str(pathlib.Path(csvConfigFile)))
 
@@ -312,6 +315,9 @@ class Arguments:
 		self.printOfVers = False
 		self.printOfHelp = False
 		self.checkArgs()
+
+	def __del__(self):
+		del self
 
 	def getFonts(self):
 		return self.fonts
