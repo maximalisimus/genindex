@@ -480,6 +480,8 @@ def main():
 		# modifyTime = Files.getDataTime(_str)
 		# print(_str, modifyTime, fileSize)
 		# list_files("./")
+		del html
+	del any_args
 
 if __name__=="__main__":
 	main()
