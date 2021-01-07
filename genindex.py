@@ -235,7 +235,7 @@ class IconFile:
 			for j in range(len(self.csvdata[i])):
 				print(self.csvdata[i][j], end = '\n')
 	
-	def compare(self, value):
+	def __compare(self, value):
 		_tmp = ""
 		for i in range(len(self.csvdata)):
 			for j in range(len(self.csvdata[i])):
@@ -252,7 +252,7 @@ class IconFile:
 		if self.str_cmake.lower() in str(root_name).lower(): return self.icon_cmake
 		if self.str_shasums.lower() in str(root_name).lower(): return self.icon_sums
 		if self.str_md5sums.lower() in str(root_name).lower(): return self.icon_sums
-		root_result = self.compare(root_ext)
+		root_result = self.__compare(root_ext)
 		if root_result != False: return root_result
 		else: return self.icon_file
 
@@ -270,13 +270,13 @@ class htmlOgject:
 		self.htmlHeader = self.htmlHeader.replace("#FONTS", fonts).replace("#BGCOLOR",bg_color)
 		self.htmlFooter = self.htmlFooter.replace("#VERSION", VERSION)
 		self.icons = IconFile()
-		if iconCSVConfig == None: self.iconInit("./template/icons.csv")
-		else: self.iconInit(iconCSVConfig)
+		if iconCSVConfig == None: self.__iconInit("./template/icons.csv")
+		else: self.__iconInit(iconCSVConfig)
 
 	def __del__(self):
 		del self
 
-	def iconInit(self,csvConfigFile = None):
+	def __iconInit(self,csvConfigFile = None):
 		if csvConfigFile != None: self.icons.csv_reader(str(pathlib.Path(csvConfigFile)))
 
 	def setFonts(self, value):
@@ -356,19 +356,38 @@ class Arguments:
 	def getExcFile(self):
 		return self.exclude_file
 
-	def genName(self):
+	def genName(self, countChar = 5):
+		'''
+			_fine_str = ""
+			counter = 0
+			_tmp_str = random.choice(self._lng_str)
+			_fine_str += _tmp_str
+			counter = random.randint(0, 9)
+			_fine_str += str(counter)
+			_tmp_str = random.choice(self._lng_str)
+			_fine_str += _tmp_str
+			counter = random.randint(0, 9)
+			_fine_str += str(counter)
+			_tmp_str = random.choice(self._lng_str)
+			_fine_str += _tmp_str
+			return str(_fine_str)
+		'''
 		_fine_str = ""
-		counter = 0
-		_tmp_str = random.choice(self._lng_str)
-		_fine_str += _tmp_str
-		counter = random.randint(0, 9)
-		_fine_str += str(counter)
-		_tmp_str = random.choice(self._lng_str)
-		_fine_str += _tmp_str
-		counter = random.randint(0, 9)
-		_fine_str += str(counter)
-		_tmp_str = random.choice(self._lng_str)
-		_fine_str += _tmp_str
+		rnd_count = 0
+		if countChar%2:
+			_tmp_str = random.choice(self._lng_str)
+			_fine_str += _tmp_str
+		while len(_fine_str) <= countChar-2:
+			if countChar%2:
+				rnd_count = random.randint(0, 9)
+				_fine_str += str(rnd_count)
+				_tmp_str = random.choice(self._lng_str)
+				_fine_str += _tmp_str
+			else:
+				_tmp_str = random.choice(self._lng_str)
+				_fine_str += _tmp_str
+				rnd_count = random.randint(0, 9)
+				_fine_str += str(rnd_count)
 		return str(_fine_str)
 
 	def generate_random_name(self):
