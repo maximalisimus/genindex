@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import pathlib
-import os
 import sys
 
 PREFIX = str(pathlib.Path(sys.argv[0]).resolve()).replace(pathlib.Path(sys.argv[0]).name,'')
@@ -17,91 +16,103 @@ except ImportError:
 	
 class InIConfig():
 	
-	def __init__(self, exdir = "None", exfls = "None",fonts = "sans-serif", bgcolor = "white", addindex = False):
+	def __init__(self, configFile = "None", on_fonts = "sans-serif", on_bgcolor = "white", is_addindex = False):
 		self.sections = "Settings"
-		self.parameter_1 = "fonts"
-		self.parameter_2 = "bgcolor"
-		self.parameter_3 = "addindex"
-		self.parameter_4 = "exclude_dir"
-		self.parameter_5 = "exclude_files"
-		self.data_1 = fonts
-		self.data_2 = bgcolor
-		self.data_3 = addindex
-		self.data_4 = exdir
-		self.data_5 = exfls
+		self.param_fonts = "fonts"
+		self.param_bgcolor = "bgcolor"
+		self.param_addindex = "addindex"
+		self.param_exdirs = "exclude_dir"
+		self.param_exfls = "exclude_files"
+		self.data_fonts = on_fonts
+		self.data_bgcolor = on_bgcolor
+		self.data_addindex = is_addindex
+		self.data_exdirs = "None"
+		self.data_exfls = "None"
+		if configFile == "None":
+			self.iniFile = "settings.ini"
+		elif not pathlib.Path(configFile).exists():
+			self.iniFile = str(pathlib.Path(configFile).resolve())
+			self.writeconfig()
+		else:
+			self.iniFile = str(pathlib.Path(configFile).resolve())
 	
-	def setFonts(self,fnt):
-		self.data_1 = fnt
+	def __del__(self):
+		del self
 	
-	def getFonts(self):
-		return self.data_1
+	def setINIFile(self,config_files):
+		if pathlib.Path(config_files).exists():
+			self.iniFile = str(pathlib.Path(config_files).resolve())
+	
+	def getINIFile(self):
+		return self.iniFile
+	
+	def setDataFonts(self, on_fonts):
+		self.data_fonts = on_fonts
+	
+	def getDataFonts(self):
+		return self.data_fonts
 		
-	def setBGColor(self,bg_color):
-		self.data_2 = bg_color
+	def setDataBGColor(self,on_bgcolor):
+		self.data_bgcolor = on_bgcolor
 		
-	def getBGCOLOR(self):
-		return self.data_2
+	def getDataBGCOLOR(self):
+		return self.data_bgcolor
 		
-	def setAddindex(self, isindex):
-		self.data_3 = isindex
+	def setDataAddindex(self, is_index):
+		self.data_addindex = is_index
 		
-	def getAddindex(self):
-		return self.data_3
+	def getDataAddindex(self):
+		return self.data_addindex
 	
-	def setExdir(self,ex_dir):
-		self.data_4 = ';'.join(ex_dir)
+	def setExdir(self,on_exdirs):
+		self.data_exdirs = ';'.join(on_exdirs)
 	
-	def getExdir(self):
-		return self.data_4.split(';')
+	def getDataExdir(self):
+		return self.data_exdirs.split(';')
 	
-	def setExFls(self,ex_fls):
-		self.data_4 = ';'.join(ex_fls)
+	def setDataExFls(self,on_exfls):
+		self.data_exfls = ';'.join(on_exfls)
 	
-	def getExfls(self):
-		return self.data_5.split(';')
+	def getDataExfls(self):
+		return self.data_exfls.split(';')
 	
 	def writeconfig(self):
 		cnf = configparser.ConfigParser()
 		cnf.add_section(self.sections)
-		cnf.set(self.sections,self.parameter_1,self.data_1)
-		cnf.set(self.sections,self.parameter_2,self.data_2)
-		cnf.set(self.sections,self.parameter_3,self.data_3)
-		cnf.set(self.sections,self.parameter_4,self.data_4)
-		cnf.set(self.sections,self.parameter_5,self.data_5)
+		cnf.set(self.sections,self.param_fonts,self.data_fonts)
+		cnf.set(self.sections,self.param_bgcolor,self.data_bgcolor)
+		cnf.set(self.sections,self.param_addindex,self.data_addindex)
+		cnf.set(self.sections,self.param_exdirs,self.data_exdirs)
+		cnf.set(self.sections,self.param_exfls,self.data_exfls)
 		# cnf.remove_option(,)
 		# cnf.remove_section()
-		cf = open(settings_file, "w")
+		cf = open(self.iniFile, "w")
 		cnf.write(cf)
 		cf.close()
 	
 	def readconfig(self):
 		cnf = configparser.ConfigParser()
-		cf = open(settings_file, "r")
+		cf = open(self.iniFile, "r")
 		cnf.read_file(cf)
-		self.data_1 = cnf.get(self.sections,self.parameter_1)
-		self.data_2 = cnf.get(self.sections,self.parameter_2)
-		self.data_3 = cnf.get(self.sections,self.parameter_3)
-		self.data_4 = cnf.get(self.sections,self.parameter_4)
-		self.data_5 = cnf.get(self.sections,self.parameter_5)
+		self.data_fonts = cnf.get(self.sections,self.param_fonts)
+		self.data_bgcolor = cnf.get(self.sections,self.param_bgcolor)
+		self.data_addindex = cnf.get(self.sections,self.param_addindex)
+		self.data_exdirs = cnf.get(self.sections,self.param_exdirs)
+		self.data_exfls = cnf.get(self.sections,self.param_exfls)
 		cf.close()
 
 	def printconfig(self):
-		print(self.parameter_1,"=",self.data_1)
-		print(self.parameter_2,"=",self.data_2)
-		print(self.parameter_3,"=",self.data_3)
-		print(self.parameter_4,"=",self.data_4)
-		print(self.parameter_5,"=",self.data_5)
+		print("#",self.iniFile)
+		print("[Settings]")
+		print(self.param_fonts,"=",self.data_fonts)
+		print(self.param_bgcolor,"=",self.data_bgcolor)
+		print(self.param_addindex,"=",self.data_addindex)
+		print(self.param_exdirs,"=",self.data_exdirs)
+		print(self.param_exfls,"=",self.data_exfls)
 
 if __name__ == "__main__":
-	ini_conf = InIConfig()
+	ini_conf = InIConfig(settings_file)
 	ini_conf.readconfig()
 	#ini_conf.printconfig()
-	#tmp = ["./git", "./build", "./__pycache__"]
-	#a = ' '.join(tmp)
-	#print(a)
-	print(str(' '.join(ini_conf.getExdir())))
-	#print("-----------------")
-	#ini_conf.setExdir("./git")
 	#ini_conf.writeconfig()
-	#ini_conf.readconfig()
-	#ini_conf.printconfig()
+	del ini_conf
