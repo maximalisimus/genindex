@@ -16,117 +16,69 @@ except ImportError:
 
 class InIConfig():
 	
-	def __init__(self, configFile = "None", on_fonts = "sans-serif", on_bgcolor = "white", is_addindex = False):
-		self.sections = "Settings"
-		self.param_fonts = "fonts"
-		self.param_bgcolor = "bgcolor"
-		self.param_addindex = "addindex"
-		self.param_exdirs = "exclude_dir"
-		self.param_exfls = "exclude_files"
-		self.data_fonts = on_fonts
-		self.data_bgcolor = on_bgcolor
-		self.data_addindex = is_addindex
-		self.data_exdirs = "None"
-		self.data_exfls = "None"
+	def __init__(self, configFile = "None"):
 		if configFile == "None":
 			self.iniFile = "settings.ini"
 		elif not pathlib.Path(configFile).exists():
 			self.iniFile = str(pathlib.Path(configFile).resolve())
-			self.writeconfig()
 		else:
 			self.iniFile = str(pathlib.Path(configFile).resolve())
+		self.ini_config = {}
+		self.cnf = configparser.ConfigParser()
 	
 	def __del__(self):
 		del self
 	
-	def ResetConfig(self):
-		self.sections = "Settings"
-		self.param_fonts = "fonts"
-		self.param_bgcolor = "bgcolor"
-		self.param_addindex = "addindex"
-		self.param_exdirs = "exclude_dir"
-		self.param_exfls = "exclude_files"
-		self.data_fonts = "sans-serif"
-		self.data_bgcolor = "white"
-		self.data_addindex = False
-		self.data_exdirs = "None"
-		self.data_exfls = "None"
-		self.writeconfig()
+	def writeConfig(self):
+		self.cnf.read_dict(self.ini_config)
+		with open(str(pathlib.Path(self.iniFile)), "w") as cf:
+			self.cnf.write(cf)
 	
-	def setINIFile(self,config_files):
-		if pathlib.Path(config_files).exists():
-			self.iniFile = str(pathlib.Path(config_files).resolve())
+	def readConfig(self):
+		self.ini_config.clear()
+		dict_sample = {}
+		with open(str(pathlib.Path(self.iniFile)), "r") as cf:
+			self.cnf.read_file(cf)
+		for keys in self.cnf.sections():
+			self.ini_config.setdefault(keys)
+			dict_sample.clear()
+			for opt in self.cnf.options(keys):
+				dict_sample.setdefault(opt,self.cnf.get(keys,opt))
+			self.ini_config[keys] = dict_sample.copy()
+		dict_sample.clear()
+		del dict_sample
 	
-	def getINIFile(self):
-		return self.iniFile
+	def resetAllDict(self):
+		self.ini_config.clear()
 	
-	def setDataFonts(self, on_fonts):
-		self.data_fonts = on_fonts
+	def setDictParam(self, onsection, onkeys, onvalue):
+		if onsection in self.ini_config:
+			if onkeys in self.ini_config[onsection]:
+				self.ini_config[onsection][onkeys] = str(onvalue)
+				self.cnf.read_dict(self.ini_config)
 	
-	def getDataFonts(self):
-		return self.data_fonts
-		
-	def setDataBGColor(self,on_bgcolor):
-		self.data_bgcolor = on_bgcolor
-		
-	def getDataBGCOLOR(self):
-		return self.data_bgcolor
-		
-	def setDataAddindex(self, is_index):
-		self.data_addindex = is_index
-		
-	def getDataAddindex(self):
-		return self.data_addindex
-	
-	def setExdir(self,on_exdirs):
-		self.data_exdirs = ';'.join(on_exdirs)
-	
-	def getDataExdir(self):
-		return self.data_exdirs.split(';')
-	
-	def setDataExFls(self,on_exfls):
-		self.data_exfls = ';'.join(on_exfls)
-	
-	def getDataExfls(self):
-		return self.data_exfls.split(';')
-	
-	def writeconfig(self):
-		cnf = configparser.ConfigParser()
-		cnf.add_section(self.sections)
-		cnf.set(self.sections,self.param_fonts,self.data_fonts)
-		cnf.set(self.sections,self.param_bgcolor,self.data_bgcolor)
-		cnf.set(self.sections,self.param_addindex,self.data_addindex)
-		cnf.set(self.sections,self.param_exdirs,self.data_exdirs)
-		cnf.set(self.sections,self.param_exfls,self.data_exfls)
-		# cnf.remove_option(,)
-		# cnf.remove_section()
-		cf = open(self.iniFile, "w")
-		cnf.write(cf)
-		cf.close()
-	
-	def readconfig(self):
-		cnf = configparser.ConfigParser()
-		cf = open(self.iniFile, "r")
-		cnf.read_file(cf)
-		self.data_fonts = cnf.get(self.sections,self.param_fonts)
-		self.data_bgcolor = cnf.get(self.sections,self.param_bgcolor)
-		self.data_addindex = cnf.get(self.sections,self.param_addindex)
-		self.data_exdirs = cnf.get(self.sections,self.param_exdirs)
-		self.data_exfls = cnf.get(self.sections,self.param_exfls)
-		cf.close()
-
-	def printconfig(self):
-		print("#",self.iniFile)
-		print("[Settings]")
-		print(self.param_fonts,"=",self.data_fonts)
-		print(self.param_bgcolor,"=",self.data_bgcolor)
-		print(self.param_addindex,"=",self.data_addindex)
-		print(self.param_exdirs,"=",self.data_exdirs)
-		print(self.param_exfls,"=",self.data_exfls)
+	def setSectionDict(self, onsection, listparam, listvalue):
+		dict_sample = {}
+		dict_sample.clear()
+		self.ini_config.setdefault(str(onsection))
+		count = len(listvalue)
+		for keys in range(len(listparam)):
+			if keys < count:
+				dict_sample.setdefault(str(listparam[keys]),str(listvalue[keys]))
+			else:
+				dict_sample.setdefault(str(listparam[keys]),"None")
+		#print(dict_sample)
+		self.ini_config[onsection] = dict_sample.copy()
+		dict_sample.clear()
+		del dict_sample
 
 if __name__ == "__main__":
-	ini_conf = InIConfig(settings_file)
-	ini_conf.readconfig()
-	#ini_conf.printconfig()
-	#ini_conf.writeconfig()
-	del ini_conf
+	#config_file = "settings3.ini"
+	#ini_conf = InIConfig(config_file)
+	#ini_conf.readConfig()
+	#print(ini_conf.ini_config)
+	#ini_conf.setDictParam("Settings","bgcolor","white")
+	#print("-------------------------------")
+	#ini_conf.writeConfig()
+	#ini_conf.readConfig()
+	#print(ini_conf.ini_config)
