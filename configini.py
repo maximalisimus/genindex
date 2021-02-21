@@ -13,7 +13,7 @@ try:
 	import configparser
 except ImportError:
 	import ConfigParser as configparser
-	
+
 class InIConfig():
 	
 	def __init__(self, configFile = "None", on_fonts = "sans-serif", on_bgcolor = "white", is_addindex = False):
@@ -38,6 +38,20 @@ class InIConfig():
 	
 	def __del__(self):
 		del self
+	
+	def ResetConfig(self):
+		self.sections = "Settings"
+		self.param_fonts = "fonts"
+		self.param_bgcolor = "bgcolor"
+		self.param_addindex = "addindex"
+		self.param_exdirs = "exclude_dir"
+		self.param_exfls = "exclude_files"
+		self.data_fonts = "sans-serif"
+		self.data_bgcolor = "white"
+		self.data_addindex = False
+		self.data_exdirs = "None"
+		self.data_exfls = "None"
+		self.writeconfig()
 	
 	def setINIFile(self,config_files):
 		if pathlib.Path(config_files).exists():
