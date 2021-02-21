@@ -62,7 +62,7 @@ class InIConfig():
 	def delDictParam(self,onsection, onkeys):
 		if onsection in self.ini_config:
 			if onkeys in self.ini_config[onsection]:
-				self.ini_config[onsection].pop(onkeys,"Error! There's not in key on dict.")
+				self.ini_config[onsection].pop(onkeys,"Error! There's not in key the dict.")
 	
 	def addDictParam(self, onsection, onkeys, onvalue):
 		if onsection in self.ini_config:
@@ -81,6 +81,15 @@ class InIConfig():
 		self.ini_config[onsection] = dict_sample.copy()
 		dict_sample.clear()
 		del dict_sample
+	
+	def delSectionDict(self, onsection):
+		if onsection in self.ini_config:
+			self.ini_config.pop(str(onsection), "Error! There's not in section the dict.")
+	
+	def getSectionOnList(self, onsection):
+		if onsection in self.ini_config:
+			return list(self.ini_config[onsection].items())
+		else: pass
 
 def retStrOnPathIni(onlist):
 	return ';'.join(onlist)
@@ -93,7 +102,17 @@ if __name__ == "__main__":
 	#ini_conf = InIConfig(config_file)
 	#ini_conf.readConfig()
 	#print(ini_conf.ini_config)
+	'''
+	# Debug
+	tmplst = ini_conf.getSectionOnList("Settings")
+	print(tmplst)
+	print("-------------------------------")
+	#tmplst[1][1] = "black"
+	print(tmplst)
+	'''
 	#print("-------------------------------")
+	#ini_conf.delSectionDict("Settings")
+	#print(ini_conf.ini_config)
 	#ini_conf.delDictParam("Settings","bgcolor")
 	#print(ini_conf.ini_config)
 	#print("-------------------------------")
