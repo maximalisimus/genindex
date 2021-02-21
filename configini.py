@@ -72,6 +72,12 @@ class InIConfig():
 		dict_sample.clear()
 		del dict_sample
 
+def returnStrPath(onlist):
+	return ';'.join(onlist)
+
+def returnListOnStr(onstr):
+	return onstr.split(';')
+
 if __name__ == "__main__":
 	#config_file = "settings3.ini"
 	#ini_conf = InIConfig(config_file)
