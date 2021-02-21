@@ -55,9 +55,20 @@ class InIConfig():
 		if onsection in self.ini_config:
 			if onkeys in self.ini_config[onsection]:
 				self.ini_config[onsection][onkeys] = str(onvalue)
-				self.cnf.read_dict(self.ini_config)
 	
-	def setSectionDict(self, onsection, listparam, listvalue):
+	def getDictParam(self, onsection, onkeys):
+		return str(self.ini_config.get(str(onsection),{}).get(str(onkeys)))
+	
+	def delDictParam(self,onsection, onkeys):
+		if onsection in self.ini_config:
+			if onkeys in self.ini_config[onsection]:
+				self.ini_config[onsection].pop(onkeys,"Error! There's not in key on dict.")
+	
+	def addDictParam(self, onsection, onkeys, onvalue):
+		if onsection in self.ini_config:
+			self.ini_config[onsection].setdefault(str(onkeys),str(onvalue))
+	
+	def addSectionDict(self, onsection, listparam, listvalue):
 		dict_sample = {}
 		dict_sample.clear()
 		self.ini_config.setdefault(str(onsection))
@@ -67,22 +78,28 @@ class InIConfig():
 				dict_sample.setdefault(str(listparam[keys]),str(listvalue[keys]))
 			else:
 				dict_sample.setdefault(str(listparam[keys]),"None")
-		#print(dict_sample)
 		self.ini_config[onsection] = dict_sample.copy()
 		dict_sample.clear()
 		del dict_sample
 
-def returnStrPath(onlist):
+def retStrOnPathIni(onlist):
 	return ';'.join(onlist)
 
-def returnListOnStr(onstr):
+def retListOnStrIni(onstr):
 	return onstr.split(';')
 
 if __name__ == "__main__":
-	#config_file = "settings3.ini"
+	#config_file = "settings.ini"
 	#ini_conf = InIConfig(config_file)
 	#ini_conf.readConfig()
 	#print(ini_conf.ini_config)
+	#print("-------------------------------")
+	#ini_conf.delDictParam("Settings","bgcolor")
+	#print(ini_conf.ini_config)
+	#print("-------------------------------")
+	#ini_conf.addDictParam("Settings","bgcolor","white")
+	#print(ini_conf.ini_config)
+	#print(ini_conf.getDictParam("Settings","bgcolor"))
 	#ini_conf.setDictParam("Settings","bgcolor","white")
 	#print("-------------------------------")
 	#ini_conf.writeConfig()
