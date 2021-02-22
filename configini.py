@@ -62,7 +62,7 @@ class InIConfig():
 			if onkeys in self.iniDict[str(onsection)]:
 				self.iniDict[str(onsection)][str(onkeys)] = str(onvalue)
 	
-	def getDictParam(self, onsection, onkeys):
+	def getDictValue(self, onsection, onkeys):
 		return str(self.iniDict.get(str(onsection),{}).get(str(onkeys)))
 	
 	def delDictParam(self, onsection, onkeys):
@@ -96,6 +96,38 @@ class InIConfig():
 				self.iniDict[str(onsection)] = dict_sample.copy()
 		dict_sample.clear()
 		del dict_sample
+	
+	def updateSectionDict(self, onsection, listparam = "None", listvalue = "None"):
+		dict_sample = {}
+		dict_sample.clear()
+		dict_backup = {}
+		dict_backup.clear()
+		self.iniDict.setdefault(str(onsection), "None")
+		if str(self.iniDict[str(onsection)]) != "None":
+			for keys in self.iniDict[str(onsection)]:
+				if str(self.iniDict[str(onsection)][str(keys)]) != "None":
+					dict_backup.setdefault(str(keys), str(self.iniDict[str(onsection)][str(keys)]))
+				else:
+					dict_backup.setdefault(str(keys),"None")
+		if listparam != "None":
+			if listvalue != "None":
+				count = len(listvalue)
+				for keys in range(len(listparam)):
+					if keys < count:
+						dict_sample.setdefault(str(listparam[keys]),str(listvalue[keys]))
+					else:
+						dict_sample.setdefault(str(listparam[keys]),"None")
+				dict_backup.update(dict_sample.copy())
+				self.iniDict[str(onsection)] = dict_backup.copy()
+			else:
+				for keys in range(len(listparam)):
+					dict_sample.setdefault(str(listparam[keys]),"None")
+				dict_backup.update(dict_sample.copy())
+				self.iniDict[str(onsection)] = dict_backup.copy()
+		dict_sample.clear()
+		del dict_sample
+		dict_backup.clear()
+		del dict_backup
 	
 	def updateSectionPara(self, onsection, listPara, nestedListPara = False):
 		dict_sample = {}
