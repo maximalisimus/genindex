@@ -178,6 +178,12 @@ class InIConfig():
 
 	def returnList(self, onstr, onsepparate = ";"):
 		return onstr.split(onsepparate)
+	
+	def printConfig(self):
+		for sections in self.iniDict:
+			print(sections)
+			for keys in self.iniDict[str(sections)]:
+				print("\t",keys,"=",self.iniDict[str(sections)][str(keys)])
 
 if __name__ == "__main__":
 	#config_file = "settings.ini"
