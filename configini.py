@@ -46,11 +46,11 @@ class InIConfig():
 			with open(str(pathlib.Path(self.iniFile)), "r") as cf:
 				self.iniConfig.read_file(cf)
 			for keys in self.iniConfig.sections():
-				self.iniDict.setdefault(keys,"None")
+				self.iniDict.setdefault(str(keys),"None")
 				dict_sample.clear()
 				for opt in self.iniConfig.options(keys):
-					dict_sample.setdefault(opt,self.iniConfig.get(keys,opt))
-				self.iniDict[keys] = dict_sample.copy()
+					dict_sample.setdefault(str(opt),str(self.iniConfig.get(keys,opt)))
+				self.iniDict[str(keys)] = dict_sample.copy()
 			dict_sample.clear()
 			del dict_sample
 	
@@ -59,23 +59,23 @@ class InIConfig():
 	
 	def setDictParamValues(self, onsection, onkeys, onvalue):
 		if onsection in self.iniDict:
-			if onkeys in self.iniDict[onsection]:
-				self.iniDict[onsection][onkeys] = str(onvalue)
+			if onkeys in self.iniDict[str(onsection)]:
+				self.iniDict[str(onsection)][str(onkeys)] = str(onvalue)
 	
 	def getDictParam(self, onsection, onkeys):
 		return str(self.iniDict.get(str(onsection),{}).get(str(onkeys)))
 	
 	def delDictParam(self, onsection, onkeys):
 		if onsection in self.iniDict:
-			if onkeys in self.iniDict[onsection]:
-				self.iniDict[onsection].pop(onkeys,"Error! There's not in key the dict.")
+			if onkeys in self.iniDict[str(onsection)]:
+				self.iniDict[str(onsection)].pop(str(onkeys),"Error! There's not in key the dict.")
 	
 	def addDictParam(self, onsection, onkeys, onvalue = "None"):
 		if onsection in self.iniDict:
 			if onvalue == "None":
-				self.iniDict[onsection].setdefault(str(onkeys),"None")
+				self.iniDict[str(onsection)].setdefault(str(onkeys),"None")
 			else:
-				self.iniDict[onsection].setdefault(str(onkeys),str(onvalue))
+				self.iniDict[str(onsection)].setdefault(str(onkeys),str(onvalue))
 	
 	def addSectionDict(self, onsection, listparam = "None", listvalue = "None"):
 		dict_sample = {}
@@ -89,64 +89,110 @@ class InIConfig():
 						dict_sample.setdefault(str(listparam[keys]),str(listvalue[keys]))
 					else:
 						dict_sample.setdefault(str(listparam[keys]),"None")
-				self.iniDict[onsection] = dict_sample.copy()
+				self.iniDict[str(onsection)] = dict_sample.copy()
 			else:
 				for keys in range(len(listparam)):
 					dict_sample.setdefault(str(listparam[keys]),"None")
-				self.iniDict[onsection] = dict_sample.copy()
+				self.iniDict[str(onsection)] = dict_sample.copy()
 		dict_sample.clear()
 		del dict_sample
-		
+	
+	def addSectionPara(self, onsection, listPara):
+		dict_sample = {}
+		dict_sample.clear()
+		dict_backup = {}
+		dict_backup.clear()
+		self.iniDict.setdefault(str(onsection), "None")
+		if str(self.iniDict[str(onsection)]) != "None":
+			for keys in self.iniDict[str(onsection)]:
+				if str(self.iniDict[str(onsection)][str(keys)]) != "None":
+					dict_backup.setdefault(str(keys), str(self.iniDict[str(onsection)][str(keys)]))
+				else:
+					dict_backup.setdefault(str(keys),"None")
+		if len(listPara) != 0:
+			for count in range(len(listPara)):
+				if len(listPara[count]) > 1:
+					dict_sample.setdefault(str(listPara[count][0]), str(listPara[count][1]))
+				else:
+					print(str(listPara[count][0]),"None")
+					dict_sample.setdefault(str(listPara[count][0]), "None")
+		dict_backup.update(dict_sample.copy())
+		self.iniDict[str(onsection)] = dict_backup.copy()
+		dict_sample.clear()
+		del dict_sample
+		dict_backup.clear()
+		del dict_backup
 	
 	def delSectionDict(self, onsection):
 		if onsection in self.iniDict:
 			self.iniDict.pop(str(onsection), "Error! There's not in section the dict.")
 	
-	def getSectionOnList(self, onsection):
+	def getSectionListPara(self, onsection, onkeys):
+		if onsection in self.iniDict:
+			if onkeys in self.iniDict[str(onsection)]:
+				rez = []
+				rez.clear()
+				rez.append(str(onkeys))
+				rez.append(str(self.iniDict[str(onsection)][str(onkeys)]))
+				return rez
+			else:
+				rez = []
+				rez.clear()
+				rez.append(str(onkeys))
+				rez.append("None")
+				return rez
+		else:
+			rez = []
+			rez.clear()
+			rez.append("None")
+			rez.append("None")
+			return rez
+	
+	def getSectionList(self, onsection):
 		if onsection in self.iniDict:
 			tmplst = []
 			rezlst = []
-			for keys in self.iniDict[onsection]:
+			for keys in self.iniDict[str(onsection)]:
 				tmplst.clear()
-				tmplst.append(keys)
-				tmplst.append(self.iniDict[onsection][keys])
+				tmplst.append(str(keys))
+				tmplst.append(self.iniDict[str(onsection)][str(keys)])
 				rezlst.append(list(tuple(tmplst)))
 			return rezlst
 	
 	def getSectionParamList(self, onsection):
 		if onsection in self.iniDict:
 			rezlst = []
-			for keys in self.iniDict[onsection]:
-				rezlst.append(keys)
+			for keys in self.iniDict[str(onsection)]:
+				rezlst.append(str(keys))
 			return rezlst
 	
 	def getSectionValueList(self, onsection):
 		if onsection in self.iniDict:
 			rezlst = []
-			for keys in self.iniDict[onsection]:
-				rezlst.append(self.iniDict[onsection][keys])
+			for keys in self.iniDict[str(onsection)]:
+				rezlst.append(self.iniDict[str(onsection)][str(keys)])
 			return rezlst
 
-def returnStrOnPathIni(onlist):
-	return ';'.join(onlist)
+	def returnStr(self, onlist, onsepparate = ";"):
+		return onsepparate.join(onlist)
 
-def returnListOnStrIni(onstr):
-	return onstr.split(';')
+	def returnList(self, onstr, onsepparate = ";"):
+		return onstr.split(onsepparate)
 
 if __name__ == "__main__":
-	#config_file = "settings.ini"
-	#ini_conf = InIConfig(config_file)
-	#ini_conf.readConfig()
-	#print(ini_conf.getSectionParamList("Settings"))
-	#print(ini_conf.getSectionValueList("Settings"))
+	config_file = "settings.ini"
+	ini_conf = InIConfig(config_file)
+	ini_conf.readConfig()
+	print(ini_conf.getSectionListPara("Settings","bgcolor"))
 	#print(ini_conf.iniDict)
 	#print("-------------------------------")
-	#ini_conf.addSectionDict("Global")#,["main","about"])#,["True","False"])
+	#newlist = ini_conf.getSectionList("Settings")
+	#newlist[1][1] = "black"
+	#newlist = [["Mein","True"],["Dynamic","False"]]
+	#ini_conf.delSectionDict("Settings")
+	#ini_conf.addSectionPara("Settings", newlist)
 	#print(ini_conf.iniDict)
-	##ini_conf.getSectionOnList("Settings")
-	#tmp_lst = ini_conf.getSectionOnList("Settings")
-	#print(tmp_lst)
 	#print("-------------------------------")
-	#tmp_lst[1][1] = "black"
-	#print(tmp_lst)
-	
+	#newlist = [["Mein","True"],["Dynamic","False"]]
+	#ini_conf.addSectionPara("Types", newlist)
+	#print(ini_conf.iniDict)
