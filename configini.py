@@ -97,7 +97,7 @@ class InIConfig():
 		dict_sample.clear()
 		del dict_sample
 	
-	def addSectionPara(self, onsection, listPara):
+	def updateSectionPara(self, onsection, listPara, nestedListPara = False):
 		dict_sample = {}
 		dict_sample.clear()
 		dict_backup = {}
@@ -110,12 +110,19 @@ class InIConfig():
 				else:
 					dict_backup.setdefault(str(keys),"None")
 		if len(listPara) != 0:
-			for count in range(len(listPara)):
-				if len(listPara[count]) > 1:
-					dict_sample.setdefault(str(listPara[count][0]), str(listPara[count][1]))
+			if nestedListPara:
+				for count in range(len(listPara)):
+					if len(listPara[count]) > 1:
+						dict_sample.setdefault(str(listPara[count][0]), str(listPara[count][1]))
+					else:
+						#print(str(listPara[count][0]),"None")
+						dict_sample.setdefault(str(listPara[count][0]), "None")
+			else:
+				if len(listPara) > 1:
+					dict_sample.setdefault(str(listPara[0]), str(listPara[1]))
 				else:
-					print(str(listPara[count][0]),"None")
-					dict_sample.setdefault(str(listPara[count][0]), "None")
+					#print(str(listPara[0]),"None")
+					dict_sample.setdefault(str(listPara[0]), "None")
 		dict_backup.update(dict_sample.copy())
 		self.iniDict[str(onsection)] = dict_backup.copy()
 		dict_sample.clear()
@@ -179,7 +186,7 @@ class InIConfig():
 	def returnList(self, onstr, onsepparate = ";"):
 		return onstr.split(onsepparate)
 	
-	def printConfig(self, istab = False):
+	def printConfigDict(self, istab = False):
 		for sections in self.iniDict:
 			strsection = "[" + sections + "]"
 			print(strsection)
@@ -192,16 +199,19 @@ if __name__ == "__main__":
 	#config_file = "settings.ini"
 	#ini_conf = InIConfig(config_file)
 	#ini_conf.readConfig()
-	#ini_conf.printConfig()
+	#ini_conf.printConfigDict()
 	#print(ini_conf.getSectionListPara("Settings","bgcolor"))
 	#print(ini_conf.iniDict)
 	#print("-------------------------------")
 	#newlist = ini_conf.getSectionList("Settings")
 	#newlist[1][1] = "black"
 	#newlist = [["Mein","True"],["Dynamic","False"]]
-	#newlist = [["bgcolor","black"]]
+	#newlist = ["bgcolor","black"]
+	# newlist = [["bgcolor","black"]]
 	#ini_conf.delSectionDict("Settings")
-	#ini_conf.addSectionPara("Settings", newlist)
+	#ini_conf.updateSectionPara("Settings", newlist)
+	# ini_conf.updateSectionPara("Settings", newlist, True)
+	#ini_conf.printConfigDict()
 	#print(ini_conf.iniDict)
 	#print("-------------------------------")
 	#newlist = [["Mein","True"],["Dynamic","False"]]
