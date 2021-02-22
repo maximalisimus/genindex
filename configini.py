@@ -28,7 +28,8 @@ class InIConfig():
 		del self
 	
 	def setINIFile(self, configFile):
-		self.iniFile = str(pathlib.Path(configFile).resolve())
+		if len(str(configFile)) != 0:
+			self.iniFile = str(pathlib.Path(configFile).resolve())
 	
 	def getINIFile(self):
 		return self.iniFile
