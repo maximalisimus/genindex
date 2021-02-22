@@ -115,13 +115,11 @@ class InIConfig():
 					if len(listPara[count]) > 1:
 						dict_sample.setdefault(str(listPara[count][0]), str(listPara[count][1]))
 					else:
-						#print(str(listPara[count][0]),"None")
 						dict_sample.setdefault(str(listPara[count][0]), "None")
 			else:
 				if len(listPara) > 1:
 					dict_sample.setdefault(str(listPara[0]), str(listPara[1]))
 				else:
-					#print(str(listPara[0]),"None")
 					dict_sample.setdefault(str(listPara[0]), "None")
 		dict_backup.update(dict_sample.copy())
 		self.iniDict[str(onsection)] = dict_backup.copy()
