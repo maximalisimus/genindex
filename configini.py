@@ -189,6 +189,7 @@ if __name__ == "__main__":
 	#newlist = ini_conf.getSectionList("Settings")
 	#newlist[1][1] = "black"
 	#newlist = [["Mein","True"],["Dynamic","False"]]
+	#newlist = [["bgcolor","black"]]
 	#ini_conf.delSectionDict("Settings")
 	#ini_conf.addSectionPara("Settings", newlist)
 	#print(ini_conf.iniDict)
