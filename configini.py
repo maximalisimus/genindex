@@ -180,10 +180,10 @@ class InIConfig():
 		return onstr.split(onsepparate)
 
 if __name__ == "__main__":
-	config_file = "settings.ini"
-	ini_conf = InIConfig(config_file)
-	ini_conf.readConfig()
-	print(ini_conf.getSectionListPara("Settings","bgcolor"))
+	#config_file = "settings.ini"
+	#ini_conf = InIConfig(config_file)
+	#ini_conf.readConfig()
+	#print(ini_conf.getSectionListPara("Settings","bgcolor"))
 	#print(ini_conf.iniDict)
 	#print("-------------------------------")
 	#newlist = ini_conf.getSectionList("Settings")
