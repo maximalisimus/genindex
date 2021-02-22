@@ -179,16 +179,20 @@ class InIConfig():
 	def returnList(self, onstr, onsepparate = ";"):
 		return onstr.split(onsepparate)
 	
-	def printConfig(self):
+	def printConfig(self, istab = False):
 		for sections in self.iniDict:
-			print(sections)
+			strsection = "[" + sections + "]"
+			print(strsection)
 			for keys in self.iniDict[str(sections)]:
-				print("\t",keys,"=",self.iniDict[str(sections)][str(keys)])
+				if istab: print("\t",keys,"=",self.iniDict[str(sections)][str(keys)])
+				else: print(keys,"=",self.iniDict[str(sections)][str(keys)])
+			print("")
 
 if __name__ == "__main__":
 	#config_file = "settings.ini"
 	#ini_conf = InIConfig(config_file)
 	#ini_conf.readConfig()
+	#ini_conf.printConfig()
 	#print(ini_conf.getSectionListPara("Settings","bgcolor"))
 	#print(ini_conf.iniDict)
 	#print("-------------------------------")
