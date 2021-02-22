@@ -129,6 +129,26 @@ class InIConfig():
 		dict_backup.clear()
 		del dict_backup
 	
+	def addSectionPara(self, onsection, listPara, nestedListPara = False):
+		dict_sample = {}
+		dict_sample.clear()
+		self.iniDict.setdefault(str(onsection), "None")
+		if len(listPara) != 0:
+			if nestedListPara:
+				for count in range(len(listPara)):
+					if len(listPara[count]) > 1:
+						dict_sample.setdefault(str(listPara[count][0]), str(listPara[count][1]))
+					else:
+						dict_sample.setdefault(str(listPara[count][0]), "None")
+			else:
+				if len(listPara) > 1:
+					dict_sample.setdefault(str(listPara[0]), str(listPara[1]))
+				else:
+					dict_sample.setdefault(str(listPara[0]), "None")
+		self.iniDict[str(onsection)] = dict_sample.copy()
+		dict_sample.clear()
+		del dict_sample
+	
 	def updateSectionPara(self, onsection, listPara, nestedListPara = False):
 		dict_sample = {}
 		dict_sample.clear()
