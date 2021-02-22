@@ -224,6 +224,25 @@ class InIConfig():
 				if istab: print("\t",keys,"=",self.iniDict[str(sections)][str(keys)])
 				else: print(keys,"=",self.iniDict[str(sections)][str(keys)])
 			print("")
+	
+	def SortedDict(self):
+		dict_main = {}
+		dict_main.clear()
+		dict_nested = {}
+		dict_nested.clear()
+		for keys in sorted(self.iniDict.keys()):
+			dict_main.setdefault(str(keys),"None")
+			dict_nested.clear()
+			for params in sorted(self.iniDict[keys].keys()):
+				dict_nested.setdefault(str(params),str(self.iniDict[keys][params]))
+			dict_main[keys] = dict_nested.copy()
+		self.resetAllDict()
+		self.iniDict.update(dict_main.copy())
+		dict_main = {}
+		dict_main.clear()
+		dict_nested.clear()
+		del dict_main
+		del dict_nested
 
 if __name__ == "__main__":
 	#config_file = "settings.ini"
@@ -231,11 +250,16 @@ if __name__ == "__main__":
 	#ini_conf.readConfig()
 	#ini_conf.printConfigDict()
 	#print("-------------------------------")
+	#ini_conf.SortedDict()
+	#ini_conf.printConfigDict()
+	# Остаётся только ini_conf.writeConfig()
+	#
 	#lstparam = ini_conf.getSectionParamList("Settings")
 	#lstvalue = ini_conf.getSectionValueList("Settings")
 	#excludedir = ["./git","./build","./__pycache__"]
 	#lstvalue[3] = ini_conf.returnStr(excludedir)
 	#ini_conf.updateSectionDict("Settings",lstparam,lstvalue)
+	#ini_conf.writeConfig()
 	#ini_conf.printConfigDict()
 	#print(ini_conf.getSectionListPara("Settings","bgcolor"))
 	#print(ini_conf.iniDict)
