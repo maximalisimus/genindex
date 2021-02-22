@@ -245,17 +245,40 @@ class InIConfig():
 				else: print(keys,"=",self.iniDict[str(sections)][str(keys)])
 			print("")
 	
-	def SortedDict(self):
+	def SortedDict(self, typeReverse="None"):
+		# typeReverse = None, allreverse, mainreverse, nestedreverse
 		dict_main = {}
 		dict_main.clear()
 		dict_nested = {}
-		dict_nested.clear()
-		for keys in sorted(self.iniDict.keys()):
-			dict_main.setdefault(str(keys),"None")
-			dict_nested.clear()
-			for params in sorted(self.iniDict[keys].keys()):
-				dict_nested.setdefault(str(params),str(self.iniDict[keys][params]))
-			dict_main[keys] = dict_nested.copy()
+		dict_nested.clear()	
+		if typeReverse == "None":	
+			for keys in sorted(self.iniDict.keys()):
+				dict_main.setdefault(str(keys),"None")
+				dict_nested.clear()
+				for params in sorted(self.iniDict[keys].keys()):
+					dict_nested.setdefault(str(params),str(self.iniDict[keys][params]))
+				dict_main[keys] = dict_nested.copy()
+		elif typeReverse == "allreverse":
+			for keys in sorted(self.iniDict.keys(), reverse=True):
+				dict_main.setdefault(str(keys),"None")
+				dict_nested.clear()
+				for params in sorted(self.iniDict[keys].keys(), reverse=True):
+					dict_nested.setdefault(str(params),str(self.iniDict[keys][params]))
+				dict_main[keys] = dict_nested.copy()
+		elif typeReverse == "mainreverse":
+			for keys in sorted(self.iniDict.keys(), reverse=True):
+				dict_main.setdefault(str(keys),"None")
+				dict_nested.clear()
+				for params in sorted(self.iniDict[keys].keys()):
+					dict_nested.setdefault(str(params),str(self.iniDict[keys][params]))
+				dict_main[keys] = dict_nested.copy()
+		else:
+			for keys in sorted(self.iniDict.keys()):
+				dict_main.setdefault(str(keys),"None")
+				dict_nested.clear()
+				for params in sorted(self.iniDict[keys].keys(), reverse=True):
+					dict_nested.setdefault(str(params),str(self.iniDict[keys][params]))
+				dict_main[keys] = dict_nested.copy()
 		self.resetAllDict()
 		self.iniDict.update(dict_main.copy())
 		dict_main = {}
@@ -270,7 +293,9 @@ if __name__ == "__main__":
 	#ini_conf.readConfig()
 	#ini_conf.printConfigDict()
 	#print("-------------------------------")
+	#
 	#ini_conf.SortedDict()
+	# ini_conf.SortedDict("None") # None allreverse mainreverse nestedreverse
 	#ini_conf.printConfigDict()
 	# Остаётся только ini_conf.writeConfig()
 	#
