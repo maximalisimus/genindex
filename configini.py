@@ -111,6 +111,20 @@ class InIConfig():
 				tmplst.append(self.iniDict[onsection][keys])
 				rezlst.append(list(tuple(tmplst)))
 			return rezlst
+	
+	def getSectionParamList(self, onsection):
+		if onsection in self.iniDict:
+			rezlst = []
+			for keys in self.iniDict[onsection]:
+				rezlst.append(keys)
+			return rezlst
+	
+	def getSectionValueList(self, onsection):
+		if onsection in self.iniDict:
+			rezlst = []
+			for keys in self.iniDict[onsection]:
+				rezlst.append(self.iniDict[onsection][keys])
+			return rezlst
 
 def retStrOnPathIni(onlist):
 	return ';'.join(onlist)
@@ -122,6 +136,8 @@ if __name__ == "__main__":
 	#config_file = "settings.ini"
 	#ini_conf = InIConfig(config_file)
 	#ini_conf.readConfig()
+	#print(ini_conf.getSectionParamList("Settings"))
+	#print(ini_conf.getSectionValueList("Settings"))
 	#print(ini_conf.iniDict)
 	#print("-------------------------------")
 	#ini_conf.addSectionDict("Global")#,["main","about"])#,["True","False"])
