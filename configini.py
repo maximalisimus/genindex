@@ -126,10 +126,10 @@ class InIConfig():
 				rezlst.append(self.iniDict[onsection][keys])
 			return rezlst
 
-def retStrOnPathIni(onlist):
+def returnStrOnPathIni(onlist):
 	return ';'.join(onlist)
 
-def retListOnStrIni(onstr):
+def returnListOnStrIni(onstr):
 	return onstr.split(';')
 
 if __name__ == "__main__":
