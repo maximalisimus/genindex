@@ -230,6 +230,13 @@ if __name__ == "__main__":
 	#ini_conf = InIConfig(config_file)
 	#ini_conf.readConfig()
 	#ini_conf.printConfigDict()
+	#print("-------------------------------")
+	#lstparam = ini_conf.getSectionParamList("Settings")
+	#lstvalue = ini_conf.getSectionValueList("Settings")
+	#excludedir = ["./git","./build","./__pycache__"]
+	#lstvalue[3] = ini_conf.returnStr(excludedir)
+	#ini_conf.updateSectionDict("Settings",lstparam,lstvalue)
+	#ini_conf.printConfigDict()
 	#print(ini_conf.getSectionListPara("Settings","bgcolor"))
 	#print(ini_conf.iniDict)
 	#print("-------------------------------")
